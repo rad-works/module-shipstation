@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order">
+        <column xsi:type="decimal" name="base_shipping_surcharge_amount" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Surcharge Amount"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_canceled" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Shipping Surcharge Canceled"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_invoiced" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Shipping Surcharge Invoiced"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_refunded" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Shipping Surcharge Refunded"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_tax_amount" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Shipping Surcharge Tax Amount"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_tax_refunded" scale="4" precision="20"
+                unsigned="false"
+                nullable="true" comment="Base Shipping Surcharge Tax Refunded"/>
+        <column xsi:type="decimal" name="shipping_surcharge_amount" scale="4" precision="20" unsigned="false"
+                nullable="true"
+                comment="Shipping Surcharge Amount"/>
+    </table>
+    <table name="quote_address">
+        <column xsi:type="decimal" name="shipping_surcharge_amount" scale="4" precision="20" unsigned="false"
+                nullable="false"
+                default="0" comment="Shipping Surcharge Amount"/>
+        <column xsi:type="decimal" name="base_shipping_surcharge_amount" scale="4" precision="20"
+                unsigned="false"
+                nullable="false" default="0" comment="Base Shipping Surcharge Amount"/>
+    </table>
+</schema>

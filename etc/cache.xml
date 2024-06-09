@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="shipstation_api" translate="label,description" instance="DmiRud\ShipStation\Model\Cache\Type\ApiResponse">
+        <label>ShipStation API</label>
+        <description>ShipStation API response data</description>
+    </type>
+</config>

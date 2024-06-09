@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <shipstation>
+                <api_type>shipstation_api</api_type>
+                <allowed_ips>0.0.0.0</allowed_ips>
+                <rates_response_cache_lifetime>3600</rates_response_cache_lifetime>
+                <dimension_width>width</dimension_width>
+                <dimension_length>depth</dimension_length>
+                <dimension_height>height</dimension_height>
+                <rate_calculation_method>item_per_package</rate_calculation_method>
+            </shipstation>
+        </carriers>
+    </default>
+</config>

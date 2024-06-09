@@ -1,0 +1,67 @@
+<?php
+declare(strict_types=1);
+
+namespace DmiRud\ShipStation\Model\Carrier;
+
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\DataObject;
+
+class Package extends DataObject implements PackageInterface
+{
+    public function getLength(): int
+    {
+        return $this->getData(self::FIELD_LENGTH) ?: 0;
+    }
+
+    public function getWidth(): int
+    {
+        return $this->getData(self::FIELD_WIDTH) ?: 0;
+    }
+
+    public function getHeight(): int
+    {
+        return $this->getData(self::FIELD_HEIGHT) ?: 0;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->getData(self::FIELD_WEIGHT) ?: 0;
+    }
+
+    /**
+     * @return ProductInterface[]
+     */
+    public function getProducts(): array
+    {
+        return $this->getData(self::FIELD_PRODUCTS) ?: [];
+    }
+
+    public function setLength(int $length): PackageInterface
+    {
+        return $this->setData(self::FIELD_LENGTH, $length);
+    }
+
+    public function setWidth(int $width): PackageInterface
+    {
+        return $this->setData(self::FIELD_WIDTH, $width);
+    }
+
+    public function setHeight(int $height): PackageInterface
+    {
+        return $this->setData(self::FIELD_HEIGHT, $height);
+    }
+
+    public function setWeight(int $weight): PackageInterface
+    {
+        return $this->setData(self::FIELD_WEIGHT, $weight);
+    }
+
+    /**
+     * @param ProductInterface[] $products
+     * @return PackageInterface
+     */
+    public function setProducts(array $products): PackageInterface
+    {
+        return $this->setData(self::FIELD_PRODUCTS, $products);
+    }
+}

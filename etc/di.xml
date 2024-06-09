@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Auctane\Api\Model\Carrier\Shipping" type="DmiRud\ShipStation\Model\Carrier"/>
+    <preference for="DmiRud\ShipStation\Model\Api\Data\CarrierInterface"
+                type="DmiRud\ShipStation\Model\Api\Data\Carrier"/>
+    <preference for="DmiRud\ShipStation\Model\Api\Data\ServiceInterface"
+                type="DmiRud\ShipStation\Model\Api\Data\Service"/>
+    <preference for="DmiRud\ShipStation\Model\Api\Data\RateInterface"
+                type="DmiRud\ShipStation\Model\Api\Data\Rate"/>
+    <preference for="DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterface"
+                type="DmiRud\ShipStation\Model\Carrier\ServiceRestrictions"/>
+    <preference for="DmiRud\ShipStation\Model\Carrier\PackageInterface"
+                type="DmiRud\ShipStation\Model\Carrier\Package"/>
+    <preference for="DmiRud\ShipStation\Model\Api\RequestInterface"
+                type="DmiRud\ShipStation\Model\Api\Request"/>
+    <preference for="DmiRud\ShipStation\Model\Api\RequestBuilderInterface"
+                type="DmiRud\ShipStation\Model\Api\RequestBuilder"/>
+    <preference for="DmiRud\ShipStation\Model\Api\DataProviderInterface"
+                type="DmiRud\ShipStation\Model\Api\DataProvider"/>
+    <preference for="DmiRud\ShipStation\Model\Api\AsyncClientInterface"
+                type="DmiRud\ShipStation\Model\Api\Client"/>
+    <type name="DmiRud\ShipStation\Model\Carrier">
+        <plugin name="DmiRud_ShipStation::validate_customer_ip"
+                type="DmiRud\ShipStation\Plugin\Model\Carrier\ValidateCustomerIp"/>
+    </type>
+    <type name="DmiRud\ShipStation\Model\Api\DataProviderInterface">
+        <plugin name="DmiRud_ShipStation::add_service_restrictions_to_service"
+                type="DmiRud\ShipStation\Plugin\Model\Api\DataProviderInterface\AddServiceRestrictionsToService"/>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="DmiRud_ShipStation::collect_rates" xsi:type="object">DmiRud\ShipStation\Console\Command\CollectRatesCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

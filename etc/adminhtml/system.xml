@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="shipstation">
+                <field id="allowed_ips" translate="label comment" type="text" sortOrder="130" showInDefault="1"
+                       canRestore="1">
+                    <label>Allowed IPs (comma separated)</label>
+                    <comment><![CDATA[Leave empty to enable ShipStation Shipping for all customers.]]></comment>
+                    <backend_model>Magento\Developer\Model\Config\Backend\AllowedIps</backend_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="api_type" translate="label" type="select" sortOrder="140" showInDefault="1"
+                       canRestore="1">
+                    <label>Rates Calculation API Type</label>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\ApiType</source_model>
+                    <config_path>carriers/shipstation/api_type</config_path>
+                    <comment><![CDATA[Select ShipStation's API for shipping rates calculation.]]></comment>
+                </field>
+                <field id="ss_api_key" translate="label" type="text" sortOrder="150" showInDefault="1">
+                    <label>API Key</label>
+                    <config_path>carriers/shipstation/ss_api_key</config_path>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="ss_api_secret" translate="label" type="text" sortOrder="155" showInDefault="1">
+                    <label>API Secret</label>
+                    <config_path>carriers/shipstation/ss_api_secret</config_path>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="rates_cache_lifetime" translate="label comment" type="text" sortOrder="160" showInDefault="1">
+                    <label>Rates Cache Lifetime</label>
+                    <backend_model>Magento\Cookie\Model\Config\Backend\Lifetime</backend_model>
+                    <comment><![CDATA[Cache returned by ShipStation API rates data in seconds.]]></comment>
+                    <config_path>carriers/shipstation/rates_response_cache_lifetime</config_path>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="active_services" translate="label" type="multiselect" sortOrder="170" showInDefault="1">
+                    <label>Active Services</label>
+                    <config_path>carriers/shipstation/active_services</config_path>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\Services</source_model>
+                    <can_be_empty>1</can_be_empty>
+                    <comment>
+                        <![CDATA[The listed services are fetched from the API. Please clear the Magento cache to reload the services for newly added carriers in the ShipStation cabinet.]]>
+                    </comment>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="length" translate="label" type="select" sortOrder="180" showInDefault="1" canRestore="1">
+                    <label>Length</label>
+                    <config_path>carriers/shipstation/dimension_length</config_path>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="width" translate="label" type="select" sortOrder="181" showInDefault="1" canRestore="1">
+                    <label>Width</label>
+                    <config_path>carriers/shipstation/dimension_width</config_path>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="height" translate="label" type="select" sortOrder="182" showInDefault="1" canRestore="1">
+                    <label>Height</label>
+                    <config_path>carriers/shipstation/dimension_height</config_path>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="rate_calculation_method" translate="label" type="select" sortOrder="190" showInDefault="1"
+                       canRestore="1">
+                    <label>Rate Calculation Method</label>
+                    <config_path>carriers/shipstation/rate_calculation_method</config_path>
+                    <source_model>DmiRud\ShipStation\Model\Config\Source\RateCalculationMethod</source_model>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+                <field id="service_restrictions" translate="label" sortOrder="195" showInDefault="1" canRestore="1">
+                    <label>Carrier Size Restrictions</label>
+                    <frontend_model>DmiRud\ShipStation\Block\Adminhtml\Form\Field\ServiceRestrictions</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <config_path>carriers/shipstation/service_restrictions</config_path>
+                    <depends>
+                        <field id="*/shipstation/api_type">shipstation_api</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
+
