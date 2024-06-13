@@ -3,34 +3,26 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier\Rate;
 
-use Magento\Catalog\Api\Data\ProductInterface;
+use DmiRud\ShipStation\Model\Carrier;
+use DmiRud\ShipStation\Model\Carrier\PackageBuilderInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Escaper;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
+use Magento\Shipping\Model\Rate\PackageResult;
 use Magento\Shipping\Model\Rate\PackageResultFactory;
+use Magento\Shipping\Model\Rate\Result as RateResult;
 use Magento\Shipping\Model\Rate\ResultFactory;
 use DmiRud\ShipStation\Model\Api\Data\Rate;
 use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use DmiRud\ShipStation\Model\Api\Data\RateInterfaceFactory;
 use DmiRud\ShipStation\Model\Api\DataProviderInterface;
 use DmiRud\ShipStation\Model\Api\RequestBuilderInterface;
-use DmiRud\ShipStation\Model\Carrier\PackageInterface;
-use DmiRud\ShipStation\Model\Carrier\PackageInterfaceFactory;
 use DmiRud\ShipStation\Model\Carrier\RateCalculationMethodInterface;
 
 abstract class CalculationMethodAbstract implements RateCalculationMethodInterface
 {
-    private const XML_PATH_DIMENSIONS_LENGTH = 'carriers/shipstation/dimension_length';
-    private const XML_PATH_DIMENSIONS_WIDTH = 'carriers/shipstation/dimension_width';
-    private const XML_PATH_DIMENSIONS_HEIGHT = 'carriers/shipstation/dimension_height';
-    private const XML_PATHS_DIMENSIONS = [
-        'length' => self::XML_PATH_DIMENSIONS_LENGTH,
-        'width' => self::XML_PATH_DIMENSIONS_WIDTH,
-        'height' => self::XML_PATH_DIMENSIONS_HEIGHT
-    ];
 
     public function __construct(
         protected readonly DataProviderInterface      $dataProvider,
@@ -38,7 +30,7 @@ abstract class CalculationMethodAbstract implements RateCalculationMethodInterfa
         protected readonly RateInterfaceFactory       $rateFactory,
         protected readonly ResultFactory              $rateResultFactory,
         protected readonly MethodFactory              $rateResultMethodFactory,
-        protected readonly PackageInterfaceFactory    $packageFactory,
+        protected readonly PackageBuilderInterface    $packageBuilder,
         protected readonly PackageResultFactory       $packageResultFactory,
         protected readonly ProductRepositoryInterface $productRepository,
         protected readonly RequestBuilderInterface    $requestBuilder,
@@ -48,29 +40,41 @@ abstract class CalculationMethodAbstract implements RateCalculationMethodInterfa
     {
     }
 
-    /**
-     * @param ProductInterface $product
-     * @param PackageInterface|null $package
-     * @return PackageInterface
-     * @throws NoSuchEntityException
-     * @TODO add logic for "Bin packing problem"
-     */
-    protected function createPackageForProduct(ProductInterface $product, PackageInterface $package = null): PackageInterface
-    {
-        $package = $this->packageFactory->create();
-        $package->setProducts([$product]);
-        $package->setWeight((int)$product->getWeight());
-        $product = $this->productRepository->get($product->getSku());
-        $dimensions = [];
-        foreach (self::XML_PATHS_DIMENSIONS as $configPath) {
-            $dimensions[] = (int) $product->getData($this->scopeConfig->getValue($configPath));
-        }
-        //Sort dimensions by size
-        rsort($dimensions);
-        //Combine dimensions according to the order in constant; the length have the largest number
-        $package->addData(array_combine(array_keys(self::XML_PATHS_DIMENSIONS), $dimensions));
 
-        return $package;
+    /**
+     * Get rate models from API response data
+     *
+     * @param Carrier $carrier
+     * @param array $responses
+     * @return RateResult
+     */
+    public function getRateResult(Carrier $carrier, array $responses): RateResult
+    {
+        /** @var PackageResult $packageResult */
+        $packageResult = $this->packageResultFactory->create();
+        foreach ($responses as $result) {
+            $rateResult = $this->rateResultFactory->create();
+            [$request, $response] = $result;
+            foreach ($this->getRatesFromResponse($response) as $rate) {
+                if ($rate->getService()->getCode() !== $request->getService()->getCode()) {
+                    continue;
+                }
+
+                $cost = ($rate->getShipmentCost() + $rate->getOtherCost()) * $rate->getCostAdjustmentModifier();
+                $rateMethod = $this->rateResultMethodFactory->create();
+                $rateMethod->setCarrier($carrier->getCarrierCode());
+                $rateMethod->setCarrierTitle($carrier->getConfigData('title'));
+                $rateMethod->setMethod($this->escaper->escapeHtml($rate->getServiceCode()));
+                $rateMethod->setMethodTitle($this->escaper->escapeHtml($rate->getServiceName()));
+                $rateMethod->setCost($cost);
+                $rateMethod->setPrice($cost);
+                $rateResult->append($rateMethod);
+            }
+
+            $packageResult->appendPackageResult($rateResult, 1);
+        }
+
+        return $packageResult;
     }
 
     /**

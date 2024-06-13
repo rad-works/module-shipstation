@@ -12,6 +12,10 @@
                 type="DmiRud\ShipStation\Model\Carrier\ServiceRestrictions"/>
     <preference for="DmiRud\ShipStation\Model\Carrier\PackageInterface"
                 type="DmiRud\ShipStation\Model\Carrier\Package"/>
+    <preference for="DmiRud\ShipStation\Model\Carrier\PackageBuilderInterface"
+                type="DmiRud\ShipStation\Model\Carrier\PackageBuilder"/>
+    <preference for="DmiRud\ShipStation\Model\Carrier\BoxPackerInterface"
+                type="DmiRud\ShipStation\Model\Carrier\BoxPackerFacade"/>
     <preference for="DmiRud\ShipStation\Model\Api\RequestInterface"
                 type="DmiRud\ShipStation\Model\Api\Request"/>
     <preference for="DmiRud\ShipStation\Model\Api\RequestBuilderInterface"

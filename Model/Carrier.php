@@ -39,7 +39,7 @@ use Magento\Shipping\Model\Tracking\ResultFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use DmiRud\ShipStation\Exception\NoServiceFoundForPackage;
+use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
 use DmiRud\ShipStation\Model\Api\AsyncClientInterface;
 use DmiRud\ShipStation\Model\Api\Client as ApiClient;
 use DmiRud\ShipStation\Model\Api\Data\RateInterface;
@@ -253,7 +253,7 @@ class Carrier extends AuctaneCarrier
             $rateResponses = $this->collectRateResponses(
                 $this->rateCalculationMethod->collectRequests($this->request, $this->_rawRequest)
             );
-        } catch (NoServiceFoundForPackage) {
+        } catch (NoServiceFoundForProduct) {
             return $this->getNoServiceFoundErrorMessage();
         }
 

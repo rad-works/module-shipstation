@@ -6,7 +6,7 @@ namespace DmiRud\ShipStation\Exception;
 use Magento\Framework\Exception\LocalizedException;
 use DmiRud\ShipStation\Model\Carrier\PackageInterface;
 
-class NoServiceFoundForPackage extends LocalizedException
+class NoServiceFoundForProduct extends LocalizedException
 {
     public const ERROR_CODE = '100';
 

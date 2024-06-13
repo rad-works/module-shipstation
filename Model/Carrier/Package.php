@@ -8,6 +8,11 @@ use Magento\Framework\DataObject;
 
 class Package extends DataObject implements PackageInterface
 {
+    public function getName(): ?string
+    {
+        return $this->getData(self::FIELD_NAME);
+    }
+
     public function getLength(): int
     {
         return $this->getData(self::FIELD_LENGTH) ?: 0;
@@ -34,6 +39,11 @@ class Package extends DataObject implements PackageInterface
     public function getProducts(): array
     {
         return $this->getData(self::FIELD_PRODUCTS) ?: [];
+    }
+
+    public function setName(string $name): PackageInterface
+    {
+        return $this->setData(self::FIELD_NAME, $name);
     }
 
     public function setLength(int $length): PackageInterface

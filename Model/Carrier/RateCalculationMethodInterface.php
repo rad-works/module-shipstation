@@ -6,7 +6,7 @@ namespace DmiRud\ShipStation\Model\Carrier;
 use Magento\Framework\DataObject;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Rate\Result;
-use DmiRud\ShipStation\Exception\NoServiceFoundForPackage;
+use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
 use DmiRud\ShipStation\Model\Carrier;
 
@@ -18,7 +18,7 @@ interface RateCalculationMethodInterface
      * @param RateRequest $rateRequest
      * @param DataObject $rawRateRequest
      * @return RequestInterface[]
-     * @throws NoServiceFoundForPackage
+     * @throws NoServiceFoundForProduct
      */
     public function collectRequests(RateRequest $rateRequest, DataObject $rawRateRequest): array;
 

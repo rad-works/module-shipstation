@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier;
 
+use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemsPerPackage;
+use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
 use Exception;
 use Magento\Framework\ObjectManagerInterface;
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
 
 class RateCalculationMethodFactory
 {
     private const MAP = [
-        ItemPerPackage::METHOD_CODE => ItemPerPackage::class
+        ItemPerPackage::METHOD_CODE => ItemPerPackage::class,
+        ItemsPerPackage::METHOD_CODE => ItemsPerPackage::class
     ];
 
     public function __construct(private readonly ObjectManagerInterface $objectManager)
