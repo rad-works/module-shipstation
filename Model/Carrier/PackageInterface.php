@@ -7,11 +7,14 @@ use Magento\Catalog\Api\Data\ProductInterface;
 
 interface PackageInterface
 {
+    public const FIELD_NAME = 'name';
     public const FIELD_LENGTH = 'length';
     public const FIELD_WIDTH = 'width';
     public const FIELD_HEIGHT = 'height';
     public const FIELD_WEIGHT = 'weight';
     public const FIELD_PRODUCTS = 'products';
+
+    public function getName(): ?string;
 
     public function getLength(): int;
 
@@ -26,6 +29,8 @@ interface PackageInterface
      */
     public function getProducts(): array;
 
+    public function setName(string $name): PackageInterface;
+
     public function setLength(int $length): PackageInterface;
 
     public function setWidth(int $width): PackageInterface;
@@ -39,4 +44,12 @@ interface PackageInterface
      * @return PackageInterface
      */
     public function setProducts(array $products): PackageInterface;
+
+    /**
+     * Set dimensions from array
+     *
+     * @param array $dimensions
+     * @return PackageInterface
+     */
+    public function setDimensions(array $dimensions): PackageInterface;
 }

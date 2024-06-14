@@ -15,9 +15,9 @@ use DmiRud\ShipStation\Model\Api\RequestInterface;
 use DmiRud\ShipStation\Model\Carrier;
 use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethodAbstract;
 
-class ItemPerPackage extends CalculationMethodAbstract
+class ItemsPerPackage extends ItemPerPackage
 {
-    public const METHOD_CODE = 'item_per_package';
+    public const METHOD_CODE = 'items_per_package';
 
     /**
      * Prepares ShipStation API request models and its payload
@@ -32,36 +32,31 @@ class ItemPerPackage extends CalculationMethodAbstract
     {
         $requests = [];
         $countryCode = $rawRateRequest->getDestCountry();
+        $products = [];
         /** @var Item $item */
         foreach ($rateRequest->getAllItems() as $item) {
             if ($item->getParentItemId()) {
                 continue;
             }
 
-            $itemRequests = [];
+            $qty = $item->getQtyToAdd();
             $product = $this->productRepository->get($item->getSku());
-            foreach ($this->dataProvider->getServicesByDestCountryCode($countryCode) as $service) {
-                try {
-                    $request = $this->requestBuilder->build(
-                        $this->packageBuilder->build($service, $product),
-                        $service,
-                        $rawRateRequest
-                    );
-                    $qty = $item->getQty();
-                    while ($qty--) {
-                        $itemRequests[] = $request;
-                    }
-                } catch (NoPackageCreatedForService) {
-                    continue;
-                }
+            while ($qty--) {
+                $products[] = $product;
             }
-
-            if (!$itemRequests) {
-                throw new NoServiceFoundForProduct;
-            }
-
-            $requests = array_merge($requests, $itemRequests);
         }
+
+        foreach ($this->dataProvider->getServicesByDestCountryCode($countryCode) as $service) {
+            try {
+                foreach ($this->packageBuilder->buildPacked($service, $products) as $package) {
+                    $requests[] = $this->requestBuilder->build($package, $service, $rawRateRequest);
+                }
+            } catch (NoPackageCreatedForService) {
+                continue;
+            }
+        }
+
+        //@TODO handle no requests or no service cases
 
         return $requests;
     }
