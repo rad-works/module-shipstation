@@ -39,7 +39,7 @@ class ItemsPerPackage extends ItemPerPackage
                 continue;
             }
 
-            $qty = $item->getQty();
+            $qty = $item->getQtyToAdd();
             $product = $this->productRepository->get($item->getSku());
             while ($qty--) {
                 $products[] = $product;

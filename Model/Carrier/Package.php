@@ -74,4 +74,12 @@ class Package extends DataObject implements PackageInterface
     {
         return $this->setData(self::FIELD_PRODUCTS, $products);
     }
+
+    public function setDimensions(array $dimensions): PackageInterface
+    {
+        //Sort dimensions by size
+        rsort($dimensions);
+        //Combine dimensions according to the order in constant; the length have the largest value
+        return $this->addData(array_combine(array_keys(PackageBuilder::XML_PATHS_DIMENSIONS), $dimensions));
+    }
 }

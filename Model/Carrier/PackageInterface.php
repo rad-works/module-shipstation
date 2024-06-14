@@ -44,4 +44,12 @@ interface PackageInterface
      * @return PackageInterface
      */
     public function setProducts(array $products): PackageInterface;
+
+    /**
+     * Set dimensions from array
+     *
+     * @param array $dimensions
+     * @return PackageInterface
+     */
+    public function setDimensions(array $dimensions): PackageInterface;
 }

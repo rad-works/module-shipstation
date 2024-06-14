@@ -38,14 +38,17 @@ class ItemPerPackage extends CalculationMethodAbstract
                 continue;
             }
 
-            $qty = $item->getQty();
             $itemRequests = [];
             $product = $this->productRepository->get($item->getSku());
             foreach ($this->dataProvider->getServicesByDestCountryCode($countryCode) as $service) {
                 try {
-                    $package = $this->packageBuilder->build($service, $product);
+                    $request = $this->requestBuilder->build(
+                        $this->packageBuilder->build($service, $product),
+                        $service,
+                        $rawRateRequest
+                    );
+                    $qty = $item->getQty();
                     while ($qty--) {
-                        $request = $this->requestBuilder->build($package, $service, $rawRateRequest);
                         $itemRequests[] = $request;
                     }
                 } catch (NoPackageCreatedForService) {

@@ -16,7 +16,7 @@ class PackageBuilder implements PackageBuilderInterface
     private const XML_PATH_DIMENSIONS_LENGTH = 'carriers/shipstation/dimension_length';
     private const XML_PATH_DIMENSIONS_WIDTH = 'carriers/shipstation/dimension_width';
     private const XML_PATH_DIMENSIONS_HEIGHT = 'carriers/shipstation/dimension_height';
-    private const XML_PATHS_DIMENSIONS = [
+    public const XML_PATHS_DIMENSIONS = [
         self::DIMENSION_LENGTH => self::XML_PATH_DIMENSIONS_LENGTH,
         self::DIMENSION_WIDTH => self::XML_PATH_DIMENSIONS_WIDTH,
         self::DIMENSION_HEIGHT => self::XML_PATH_DIMENSIONS_HEIGHT
@@ -36,15 +36,10 @@ class PackageBuilder implements PackageBuilderInterface
         $package->setName($service->getInternalCode());
         $package->setProducts([$product]);
         $package->setWeight((int)$product->getWeight());
-        $dimensions = [];
-        foreach (self::XML_PATHS_DIMENSIONS as $configPath) {
-            $dimensions[] = (int)$product->getData($this->scopeConfig->getValue($configPath));
-        }
-
-        //Sort dimensions by size
-        rsort($dimensions);
-        //Combine dimensions according to the order in constant; the length have the largest value
-        $package->addData(array_combine(array_keys(self::XML_PATHS_DIMENSIONS), $dimensions));
+        $package->setDimensions(array_map(
+            fn($configPath) => (int)$product->getData($this->scopeConfig->getValue($configPath)),
+            self::XML_PATHS_DIMENSIONS
+        ));
         if (!$service->getRestrictions()
             ||
             $package->getLength() >= $service->getRestrictions()->getMaxLength()

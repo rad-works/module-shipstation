@@ -45,8 +45,9 @@ class BoxPackerFacade implements BoxPackerInterface
         }
 
         $packages = [];
+        $packedBoxes = $packer->pack();
         /** @var PackedBox $packedBox */
-        foreach ($packer->pack() as $packedBox) {
+        foreach ($packedBoxes as $packedBox) {
             /** @var PackageInterface $package */
             $package = $this->packageFactory->create();
             $package->setName($serviceRestrictions->getService()->getInternalCode());
@@ -54,9 +55,12 @@ class BoxPackerFacade implements BoxPackerInterface
                 array_map(fn($item) => $item->getProduct(), $packedBox->getItems()->asItemArray())
             );
             $package->setWeight((int)$packedBox->getWeight());
-            $package->getLength($packedBox->getUsedLength());
-            $package->getWidth($packedBox->getUsedWidth());
-            $package->getHeight($packedBox->getUsedDepth());
+            $package->setDimensions([
+                $packedBox->getUsedLength(),
+                $packedBox->getUsedWidth(),
+                $packedBox->getUsedDepth()
+            ]);
+            $packages[] = $package;
         }
 
         return $packages;
