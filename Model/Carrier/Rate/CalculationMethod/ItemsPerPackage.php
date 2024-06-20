@@ -8,12 +8,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Address\Item;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use Magento\Shipping\Model\Rate\PackageResult;
-use Magento\Shipping\Model\Rate\Result as RateResult;
 use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Carrier;
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethodAbstract;
 
 class ItemsPerPackage extends ItemPerPackage
 {
@@ -39,7 +35,7 @@ class ItemsPerPackage extends ItemPerPackage
                 continue;
             }
 
-            $qty = $item->getQtyToAdd();
+            $qty = $item->getQty() ?: $item->getQtyToAdd();
             $product = $this->productRepository->get($item->getSku());
             while ($qty--) {
                 $products[] = $product;
@@ -55,8 +51,6 @@ class ItemsPerPackage extends ItemPerPackage
                 continue;
             }
         }
-
-        //@TODO handle no requests or no service cases
 
         return $requests;
     }

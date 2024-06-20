@@ -26,7 +26,8 @@ class PackageBuilder implements PackageBuilderInterface
         private readonly BoxPackerInterface      $boxPacker,
         private readonly PackageInterfaceFactory $packageFactory,
         private readonly ScopeConfigInterface    $scopeConfig
-    ) {
+    )
+    {
     }
 
     public function build(ServiceInterface $service, ProductInterface $product): PackageInterface
@@ -35,10 +36,12 @@ class PackageBuilder implements PackageBuilderInterface
         $package->setName($service->getInternalCode());
         $package->setProducts([$product]);
         $package->setWeight((int)$product->getWeight());
-        $package->setDimensions(array_map(
-            fn($configPath) => (int)$product->getData($this->scopeConfig->getValue($configPath)),
-            self::XML_PATHS_DIMENSIONS
-        ));
+        $package->setDimensions(
+            array_map(
+                fn($configPath) => (int)$product->getData($this->scopeConfig->getValue($configPath)),
+                self::XML_PATHS_DIMENSIONS
+            )
+        );
         if (!$service->getRestrictions()
             ||
             $package->getLength() >= $service->getRestrictions()->getMaxLength()
@@ -58,10 +61,5 @@ class PackageBuilder implements PackageBuilderInterface
             $service->getRestrictions(),
             array_map(fn($product) => $this->build($service, $product), $products)
         );
-    }
-
-    public static function getDimensionsKeys(): array
-    {
-        return array_keys(self::XML_PATHS_DIMENSIONS);
     }
 }

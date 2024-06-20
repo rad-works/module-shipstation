@@ -29,6 +29,11 @@ interface PackageInterface
      */
     public function getProducts(): array;
 
+    /**
+     * @return array
+     */
+    public function getProductsSkus(): array;
+
     public function setName(string $name): PackageInterface;
 
     public function setLength(int $length): PackageInterface;

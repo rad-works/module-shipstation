@@ -49,7 +49,6 @@ abstract class CalculationMethodAbstract implements RateCalculationMethodInterfa
      */
     public function getRateResult(Carrier $carrier, array $responses): RateResult
     {
-        /** @var PackageResult $packageResult */
         $packageResult = $this->packageResultFactory->create();
         foreach ($responses as $result) {
             $rateResult = $this->rateResultFactory->create();
