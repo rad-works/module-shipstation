@@ -16,8 +16,7 @@ class RequestBuilder implements RequestBuilderInterface
     public function __construct(
         private readonly RequestInterfaceFactory $requestFactory,
         private readonly SerializerInterface     $serializer
-    )
-    {
+    ) {
     }
 
     public function build(PackageInterface $package, ServiceInterface $service, DataObject $rawRateRequest): RequestInterface

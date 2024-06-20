@@ -15,6 +15,13 @@ class BoxPackerFacade implements BoxPackerInterface
     {
     }
 
+    /**
+     * Repack packages based on service restrictions
+     *
+     * @param ServiceRestrictionsInterface $serviceRestrictions
+     * @param PackageInterface[] $packages
+     * @return PackageInterface[]
+     */
     public function pack(ServiceRestrictionsInterface $serviceRestrictions, array $packages): array
     {
         $packer = new Packer();

@@ -26,8 +26,7 @@ class PackageBuilder implements PackageBuilderInterface
         private readonly BoxPackerInterface      $boxPacker,
         private readonly PackageInterfaceFactory $packageFactory,
         private readonly ScopeConfigInterface    $scopeConfig
-    )
-    {
+    ) {
     }
 
     public function build(ServiceInterface $service, ProductInterface $product): PackageInterface
@@ -59,5 +58,10 @@ class PackageBuilder implements PackageBuilderInterface
             $service->getRestrictions(),
             array_map(fn($product) => $this->build($service, $product), $products)
         );
+    }
+
+    public static function getDimensionsKeys(): array
+    {
+        return array_keys(self::XML_PATHS_DIMENSIONS);
     }
 }

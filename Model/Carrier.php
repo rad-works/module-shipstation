@@ -266,32 +266,32 @@ class Carrier extends AuctaneCarrier
                             try {
                                 /** @var RequestInterface $request */
                                 [$request, $quoteCacheKey, $deferredResponse] = $deferredResponse;
+                                //Skip all services of carrier that already failed to return rates
                                 if (in_array($request->getService()->getCarrierCode(), self::$failedCarriers)) {
                                     continue;
                                 }
 
                                 $statusCode = 200;
-                                $body = $deferredResponse;
+                                $responseBody = self::$debug[$quoteCacheKey]['response'] = $deferredResponse;
                                 /** @var Response|string $response */
                                 if ($deferredResponse instanceof HttpResponseDeferredInterface) {
                                     $response = $deferredResponse->get();
                                     $statusCode = $response->getStatusCode();
-                                    $body = $response->getBody();
+                                    $responseBody = $response->getBody();
                                 }
-                                self::$debug[$quoteCacheKey]['body'] = $body;
-                                if (!($statusCode == 200 && $body) || str_contains($body, 'ExceptionMessage')) {
+                                if (!($statusCode == 200 && $responseBody) || str_contains($responseBody, 'ExceptionMessage')) {
                                     self::$failedCarriers[] = $request->getService()->getCarrierCode();
-                                    $this->_logger->warning('ShipStation API exception: ' . $body);
+                                    $this->_logger->warning('ShipStation API exception: ' . $responseBody);
                                     continue;
                                 }
                             } catch (HttpException|LocalizedException $e) {
-                                self::$debug[$quoteCacheKey]['exception'] = $e->getMessage();
+                                self::$debug[$quoteCacheKey]['response_error'] = $e->getMessage();
                                 $this->_logger->critical($e);
                                 throw $e;
                             }
 
-                            self::$_quotesCache[$quoteCacheKey] = $body;
-                            $results[] = [$request, $body];
+                            self::$_quotesCache[$quoteCacheKey] = $responseBody;
+                            $results[] = [$request, $responseBody];
                         }
 
                         $rates = $this->rateCalculationMethod->getRateResult($this, $results);
@@ -316,14 +316,16 @@ class Carrier extends AuctaneCarrier
         $this->loadResponseCache();
         foreach ($requests as $request) {
             $quoteCacheKey = $this->_getQuotesCacheKey($request->getPayloadSerialized());
-            self::$debug[$quoteCacheKey]['requestBody'] = $request->getPayloadSerialized();
+            self::$debug[$quoteCacheKey]['request'] = $request;
+            $response = [$request, $quoteCacheKey];
+            $responses[] = &$response;
             if (array_key_exists($quoteCacheKey, self::$_quotesCache)) {
-                $responses[] = [$request, $quoteCacheKey, self::$_quotesCache[$quoteCacheKey]];
+                $response[] = self::$_quotesCache[$quoteCacheKey];
                 continue;
             }
 
-            $responses[] = [$request, $quoteCacheKey, $this->asyncClient
-                ->sendRequest(ApiClient::API_RATES_URL, body: $request->getPayloadSerialized())];
+            $response[] = $this->asyncClient
+                ->sendRequest(ApiClient::API_RATES_URL, body: $request->getPayloadSerialized());
         }
 
         return $responses;

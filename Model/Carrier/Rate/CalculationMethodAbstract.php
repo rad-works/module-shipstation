@@ -36,8 +36,7 @@ abstract class CalculationMethodAbstract implements RateCalculationMethodInterfa
         protected readonly RequestBuilderInterface    $requestBuilder,
         protected readonly Json                       $serializer,
         protected readonly ScopeConfigInterface       $scopeConfig
-    )
-    {
+    ) {
     }
 
 

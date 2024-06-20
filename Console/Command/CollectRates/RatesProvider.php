@@ -20,8 +20,7 @@ class RatesProvider
         private readonly ProductRepositoryInterface $productRepository,
         private readonly StoreEmulation             $emulation,
         private readonly State                      $state
-    )
-    {
+    ) {
     }
 
     /**

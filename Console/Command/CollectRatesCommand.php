@@ -76,11 +76,13 @@ class CollectRatesCommand extends Command
             $rate = current($rates);
             foreach (Carrier::getDebugInfo() as $info) {
                 $payload = json_decode($info['requestBody'], true);
+
+                $package = $info['package'];
                 $output->writeln('<info>ShipStation API Request Payload: </info>');
                 $output->writeln('<info>' . print_r($payload, true) . '</info>');
             }
             if ($rate) {
-                $table = new Table($output);;
+                $table = new Table($output);
                 $table->setHeaders(array_keys(current($rates)->toArray()));
                 $table->addRows(array_map(fn($rate) => $rate->toArray(), $rates));
                 $output->writeln('<info>ShipStation API Collected Rates:</info>');
