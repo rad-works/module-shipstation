@@ -36,7 +36,8 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="DmiRud_ShipStation::collect_rates" xsi:type="object">DmiRud\ShipStation\Console\Command\CollectRatesCommand</item>
+                <item name="DmiRud_ShipStation::collect-rates" xsi:type="object">DmiRud\ShipStation\Console\Command\CollectRatesCommand</item>
+                <item name="DmiRud_ShipStation::products-dimensions" xsi:type="object">DmiRud\ShipStation\Console\Command\ListProductsDimensionsCommand</item>
             </argument>
         </arguments>
     </type>

@@ -39,7 +39,6 @@ class RatesProvider
     {
         $this->state->setAreaCode(Area::AREA_FRONTEND);
         $this->emulation->startEnvironmentEmulation($storeId, force: true);
-        /** @var Quote $quote */
         $quote = $this->quoteFactory->create();
         $quantities = array_count_values($skus);
         foreach (array_map(fn($sku) => $this->productRepository->get($sku), array_unique($skus)) as $product) {

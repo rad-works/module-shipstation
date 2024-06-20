@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Console\Command;
 
+use DmiRud\ShipStation\Model\Api\RequestInterface;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,31 +36,31 @@ class CollectRatesCommand extends Command
             ->setDescription(
                 'Collect ShipStation rates by products\' skus and shipment destination postcode.'
             )->setDefinition([
-                    new InputArgument(
-                        self::ARG_DEST_POSTCODE,
-                        InputArgument::REQUIRED,
-                        'Shipment destination postcode'
-                    ),
-                    new InputArgument(
-                        self::ARG_SKUS,
-                        InputArgument::REQUIRED | InputArgument::IS_ARRAY,
-                        'List of the skus in the shipment'
-                    ),
-                    new InputOption(
-                        self::OPTION_DEST_COUNTRY,
-                        null,
-                        InputArgument::OPTIONAL,
-                        'Shipment destination country code(US by default)',
-                        AbstractCarrier::USA_COUNTRY_ID
-                    ),
-                    new InputOption(
-                        self::OPTION_STORE_ID,
-                        null,
-                        InputArgument::OPTIONAL,
-                        'Store id (1 by default)',
-                        '1'
-                    )
-                ]);
+                new InputArgument(
+                    self::ARG_DEST_POSTCODE,
+                    InputArgument::REQUIRED,
+                    'Shipment destination postcode'
+                ),
+                new InputArgument(
+                    self::ARG_SKUS,
+                    InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                    'List of the skus in the shipment'
+                ),
+                new InputOption(
+                    self::OPTION_DEST_COUNTRY,
+                    null,
+                    InputArgument::OPTIONAL,
+                    'Shipment destination country code(US by default)',
+                    AbstractCarrier::USA_COUNTRY_ID
+                ),
+                new InputOption(
+                    self::OPTION_STORE_ID,
+                    null,
+                    InputArgument::OPTIONAL,
+                    'Store id (1 by default)',
+                    '1'
+                )
+            ]);
 
         parent::configure();
     }
@@ -73,29 +74,67 @@ class CollectRatesCommand extends Command
                 $input->getOption(self::OPTION_DEST_COUNTRY),
                 $input->getOption(self::OPTION_STORE_ID)
             );
-            $rate = current($rates);
-            foreach (Carrier::getDebugInfo() as $info) {
-                $payload = json_decode($info['requestBody'], true);
-
-                $package = $info['package'];
-                $output->writeln('<info>ShipStation API Request Payload: </info>');
-                $output->writeln('<info>' . print_r($payload, true) . '</info>');
-            }
-            if ($rate) {
-                $table = new Table($output);
-                $table->setHeaders(array_keys(current($rates)->toArray()));
-                $table->addRows(array_map(fn($rate) => $rate->toArray(), $rates));
-                $output->writeln('<info>ShipStation API Collected Rates:</info>');
-                $table->render();
-                $output->writeln('<info>Done!</info>');
-            } else {
-                $output->writeln('<error>No Rates Collected.</error>');
-            }
+            $this->writeRequestInfo($output);
+            $this->writeRatesInfo(current($rates), $output, $rates);
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return Cli::RETURN_FAILURE;
         }
 
         return Cli::RETURN_SUCCESS;
+    }
+
+    /**
+     * @param mixed $rate
+     * @param OutputInterface $output
+     * @param $rates
+     * @return void
+     */
+    private function writeRatesInfo(mixed $rate, OutputInterface $output, $rates): void
+    {
+        if ($rate) {
+            $table = new Table($output);
+            $table->setHeaders(array_keys(current($rates)->toArray()));
+            $table->addRows(array_map(fn($rate) => $rate->toArray(), $rates));
+            $output->writeln('<info>ShipStation API Collected Rates:</info>');
+            $table->render();
+            $output->writeln('<info>Done!</info>');
+        } else {
+            $output->writeln('<error>No Rates Collected.</error>');
+        }
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return void
+     */
+    private function writeRequestInfo(OutputInterface $output): void
+    {
+        $number = 1;
+        foreach (Carrier::getDebugInfo() as $info) {
+            /** @var RequestInterface $request */
+            foreach ($info['requests'] as $request) {
+                $payload = $request->getPayload();
+                $service = $request->getService()->getName() . ' (' . $request->getService()->getCode() . ')';
+                $from = sprintf('%s, %s, %s', $payload['fromPostalCode'], $payload['fromCity'], $payload['fromState']);
+                $to = sprintf('%s, %s', $payload['toPostalCode'], $payload['toCountry']);
+                $output->writeln('<info>ShipStation API Request Payload #' . $number++ . ':</info>');
+                $output->writeln('<info>Service: ' . $service . '</info>');
+                $output->writeln('<info>Skus: ' . implode(',', $request->getPackage()->getProductsSkus()) . '</info>');
+                $output->writeln('<info>From: ' . $from . '</info>');
+                $output->writeln('<info>To: ' . $to . '</info>');
+                $units = $payload['dimensions']['units'];
+                $output->writeln(
+                    '<info>Weight: ' . $payload['weight']['value'] . ' ' . $payload['weight']['units'] . '</info>'
+                );
+                foreach ($payload['dimensions'] as $dimension => $value) {
+                    if ($dimension == 'units') {
+                        continue;
+                    }
+                    $output->writeln('<info>' . ucfirst($dimension) . ': ' . $value . ' ' . $units . '</info>');
+                }
+                $output->writeln(PHP_EOL);
+            }
+        }
     }
 }
