@@ -28,6 +28,7 @@ use Magento\Quote\Model\Quote\Address\RateResult\Error;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory as RateResultErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Sales\Model\Order\Shipment as OrderShipment;
+use Magento\Shipping\Model\Rate\PackageResultFactory;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\Result\ProxyDeferred;
 use Magento\Shipping\Model\Rate\Result\ProxyDeferredFactory;
@@ -52,15 +53,24 @@ use DmiRud\ShipStation\Model\Config\Source\ApiType;
 class Carrier extends AuctaneCarrier
 {
     public const CODE = 'shipstation';
+    public const RATE_REQUEST_STATUS_FAILED = 'rate_request_failed';
+    public const RATE_REQUEST_STATUS_SUCCESS = 'rate_request_success';
     protected const RATES_CACHE_IDENTIFIER = self::CODE . '_rates';
     private static array $debug = [];
-    protected static array $failedCarriers = [];
+
+    protected static array $requests = [
+        self::RATE_REQUEST_STATUS_SUCCESS => [],
+        self::RATE_REQUEST_STATUS_FAILED => []
+    ];
+    private CacheInterface $cache;
     private ?RateRequest $request = null;
     private AsyncClientInterface $asyncClient;
+    private PackageResultFactory $packageResultFactory;
     private ProxyDeferredFactory $proxyDeferredFactory;
     private RateCalculationMethodInterface $rateCalculationMethod;
     private RateCalculationMethodFactory $rateCalculationMethodFactory;
-    private CacheInterface $cache;
+    private RateResultFactory $rateResultFactory;
+    private MethodFactory $rateResultMethodFactory;
     private Json $serializer;
 
     public function __construct(
@@ -87,6 +97,9 @@ class Carrier extends AuctaneCarrier
         AsyncClientInterface         $asyncClient,
         CacheInterface               $cache,
         RateCalculationMethodFactory $rateCalculationMethodFactory,
+        RateResultFactory            $rateResultFactory,
+        MethodFactory                $rateResultMethodFactory,
+        PackageResultFactory         $packageResultFactory,
         ProxyDeferredFactory         $proxyDeferredFactory,
         Json                         $serializer,
         array                        $data = []
@@ -117,8 +130,11 @@ class Carrier extends AuctaneCarrier
         );
         $this->asyncClient = $asyncClient;
         $this->cache = $cache;
+        $this->packageResultFactory = $packageResultFactory;
         $this->proxyDeferredFactory = $proxyDeferredFactory;
         $this->rateCalculationMethodFactory = $rateCalculationMethodFactory;
+        $this->rateResultFactory = $rateResultFactory;
+        $this->rateResultMethodFactory = $rateResultMethodFactory;
         $this->serializer = $serializer;
     }
 
@@ -250,9 +266,7 @@ class Carrier extends AuctaneCarrier
     private function getQuotes(): ProxyDeferred|Result
     {
         try {
-            $rateResponses = $this->collectRateResponses(
-                $this->rateCalculationMethod->collectRequests($this->request, $this->_rawRequest)
-            );
+            $rateResponses = $this->collectRateResponses();
         } catch (NoServiceFoundForProduct) {
             return $this->getNoServiceFoundErrorMessage();
         }
@@ -262,39 +276,37 @@ class Carrier extends AuctaneCarrier
                 'deferred' => new CallbackDeferred(
                     function () use ($rateResponses) {
                         $results = [];
-                        foreach ($rateResponses as $deferredResponse) {
+                        foreach ($rateResponses as $item) {
                             try {
                                 /** @var RequestInterface $request */
-                                [$request, $quoteCacheKey, $deferredResponse] = $deferredResponse;
-                                //Skip all services of carrier that already failed to return rates
-                                if (in_array($request->getService()->getCarrierCode(), self::$failedCarriers)) {
-                                    continue;
-                                }
-
+                                [$request, $quoteCacheKey, $response] = $item;
                                 $statusCode = 200;
-                                $responseBody = self::$debug[$quoteCacheKey]['response'] = $deferredResponse;
+                                $responseBody = $response;
                                 /** @var Response|string $response */
-                                if ($deferredResponse instanceof HttpResponseDeferredInterface) {
-                                    $response = $deferredResponse->get();
-                                    $statusCode = $response->getStatusCode();
-                                    $responseBody = $response->getBody();
+                                if ($response instanceof HttpResponseDeferredInterface) {
+                                    $statusCode = $response->get()->getStatusCode();
+                                    $responseBody = $response->get()->getBody();
                                 }
-                                if (!($statusCode == 200 && $responseBody) || str_contains($responseBody, 'ExceptionMessage')) {
-                                    self::$failedCarriers[] = $request->getService()->getCarrierCode();
-                                    $this->_logger->warning('ShipStation API exception: ' . $responseBody);
+                                self::$debug[$quoteCacheKey]['response'] = $responseBody;
+                                if (!($statusCode == 200 && str_contains((string)$responseBody, $request->getService()->getCode()))) {
+                                    self::$requests[self::RATE_REQUEST_STATUS_FAILED][] = $request;
+                                    self::$debug[$quoteCacheKey]['response_error'] = $responseBody;
+                                    $this->_logger->warning('ShipStation API error:' . $responseBody);
                                     continue;
                                 }
                             } catch (HttpException|LocalizedException $e) {
+                                self::$requests[self::RATE_REQUEST_STATUS_FAILED][] = $request;
                                 self::$debug[$quoteCacheKey]['response_error'] = $e->getMessage();
                                 $this->_logger->critical($e);
-                                throw $e;
+                                continue;
                             }
 
+                            self::$requests[self::RATE_REQUEST_STATUS_SUCCESS][] = $request;
                             self::$_quotesCache[$quoteCacheKey] = $responseBody;
                             $results[] = [$request, $responseBody];
                         }
 
-                        $rates = $this->rateCalculationMethod->getRateResult($this, $results);
+                        $rates = $this->getRateResult($this, $results);
                         $this->saveResponseCache();
 
                         return $rates;
@@ -305,27 +317,62 @@ class Carrier extends AuctaneCarrier
     }
 
     /**
+     * Get rate models from API response data
+     *
+     * @param Carrier $carrier
+     * @param array $responses
+     * @return Result
+     */
+    public function getRateResult(Carrier $carrier, array $responses): Result
+    {
+        $packageResult = $this->packageResultFactory->create();
+        foreach ($responses as $result) {
+            $rateResult = $this->rateResultFactory->create();
+            [$request, $response] = $result;
+            foreach ($this->rateCalculationMethod->createRatesFromResponse($response) as $rate) {
+                if ($rate->getService()->getCode() !== $request->getService()->getCode()) {
+                    continue;
+                }
+
+                $request->getPackage()->setRate($rate);
+                $cost = ($rate->getShipmentCost() + $rate->getOtherCost()) * $rate->getCostAdjustmentModifier();
+                $rateMethod = $this->rateResultMethodFactory->create();
+                $rateMethod->setCarrier($carrier->getCarrierCode());
+                $rateMethod->setCarrierTitle($carrier->getConfigData('title'));
+                $rateMethod->setMethod($rate->getServiceCode());
+                $rateMethod->setMethodTitle($rate->getServiceName());
+                $rateMethod->setCost($cost);
+                $rateMethod->setPrice($cost);
+                $rateResult->append($rateMethod);
+            }
+
+            $packageResult->appendPackageResult($rateResult, 1);
+        }
+
+        return $packageResult;
+    }
+
+    /**
      * Get ShipStation API rate responses
      *
-     * @param RequestInterface[] $requests
      * @return array
+     * @throws NoServiceFoundForProduct
      */
-    private function collectRateResponses(array $requests): array
+    private function collectRateResponses(): array
     {
+        $requests = $this->rateCalculationMethod->collectRequests($this->request, $this->_rawRequest);
         $responses = [];
         $this->loadResponseCache();
         foreach ($requests as $request) {
             $quoteCacheKey = $this->_getQuotesCacheKey($request->getPayloadSerialized());
-            self::$debug[$quoteCacheKey]['request'] = $request;
-            $response = [$request, $quoteCacheKey];
-            $responses[] = &$response;
+            self::$debug[$quoteCacheKey]['requests'][] = $request;
             if (array_key_exists($quoteCacheKey, self::$_quotesCache)) {
-                $response[] = self::$_quotesCache[$quoteCacheKey];
+                $responses[] = [$request, $quoteCacheKey, self::$_quotesCache[$quoteCacheKey]];
                 continue;
             }
 
-            $response[] = $this->asyncClient
-                ->sendRequest(ApiClient::API_RATES_URL, body: $request->getPayloadSerialized());
+            $responses[] = [$request, $quoteCacheKey, $this->asyncClient
+                ->sendRequest(ApiClient::API_RATES_URL, body: $request->getPayloadSerialized())];
         }
 
         return $responses;
@@ -361,7 +408,7 @@ class Carrier extends AuctaneCarrier
     {
         $responses = [];
         foreach (self::$_quotesCache as $quoteCacheKey => $quoteCache) {
-            if (str_contains($quoteCache, RateInterface::FIELD_SHIPMENT_COST)) {
+            if ($quoteCache && str_contains($quoteCache, RateInterface::FIELD_SHIPMENT_COST)) {
                 $responses[$quoteCacheKey] = $quoteCache;
             }
         }
@@ -380,15 +427,32 @@ class Carrier extends AuctaneCarrier
     /**
      * @return Result
      */
-    private function getNoServiceFoundErrorMessage(): Result
+    public function getNoServiceFoundErrorMessage(): Result
     {
         $result = $this->_rateFactory->create();
-        /* @var $error Error */
         $error = $this->_rateErrorFactory->create();
         $error->setCarrier($this->getCarrierCode())
             ->setCarrierTitle($this->getConfigData('title'))
             ->setErrorMessage('Shipment weight/size exceeds all allowed Shipping Methods, please contact us to resolve');
         $result->append($error);
+
+        return $result;
+    }
+
+    /**
+     * Get requests executed during carrier lifecycle
+     *
+     * @param string $status
+     * @param bool $codesOnly
+     * @return array
+     */
+    public static function getRequests(string $status, bool $codesOnly = false): array
+    {
+        $result = [];
+        /** @var RequestInterface $request */
+        foreach (static::$requests[$status] as $request) {
+            $result[] = $codesOnly ? $request->getService()->getCode() : $request;
+        }
 
         return $result;
     }

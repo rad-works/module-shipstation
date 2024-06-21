@@ -12,8 +12,8 @@ class RateCalculationMethod implements OptionSourceInterface
     public function toOptionArray(): array
     {
         return [
-            ItemsPerPackage::METHOD_CODE => __('Option A: Combine items into Single Box if possible'),
-            ItemPerPackage::METHOD_CODE => __('Option B: Pull Rates individually for Each Item')
+            ItemsPerPackage::METHOD_CODE => __('A: Combine Items Into Single Box If Possible'),
+            ItemPerPackage::METHOD_CODE => __('B: Pull Rates individually for Each Item')
         ];
     }
 }

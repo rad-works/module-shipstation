@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier;
 
+use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use Magento\Framework\DataObject;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use Magento\Shipping\Model\Rate\Result;
 use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Carrier;
 
 interface RateCalculationMethodInterface
 {
@@ -22,13 +21,11 @@ interface RateCalculationMethodInterface
      */
     public function collectRequests(RateRequest $rateRequest, DataObject $rawRateRequest): array;
 
-
     /**
-     * Get rate models from API response data
+     * Create rates entities from json API response
      *
-     * @param Carrier $carrier
-     * @param array $responses
-     * @return Result
+     * @param string $response
+     * @return RateInterface[]
      */
-    public function getRateResult(Carrier $carrier, array $responses): Result;
+    public function createRatesFromResponse(string $response): array;
 }

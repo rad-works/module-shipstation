@@ -23,7 +23,6 @@ class ItemPerPackage extends CalculationMethodAbstract
      * @param DataObject $rawRateRequest
      * @return RequestInterface[]
      * @throws NoServiceFoundForProduct|NoSuchEntityException
-     * @TODO add integrity validation logic for a case in which products have different carriers available
      */
     public function collectRequests(RateRequest $rateRequest, DataObject $rawRateRequest): array
     {

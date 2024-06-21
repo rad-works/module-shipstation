@@ -43,9 +43,8 @@ class RequestBuilder implements RequestBuilderInterface
             ]
         ];
 
-        $request->setId(md5($this->serializer->serialize($payload)));
-        $request->setPayload($payload);
         $request->setPayloadSerialized($this->serializer->serialize($payload));
+        $request->setPayload($payload);
         $request->setPackage($package);
         $request->setService($service);
 
