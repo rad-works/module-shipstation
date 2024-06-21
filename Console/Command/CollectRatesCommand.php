@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Console\Command;
 
+use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Symfony\Component\Console\Helper\Table;
@@ -115,10 +116,13 @@ class CollectRatesCommand extends Command
             /** @var RequestInterface $request */
             foreach ($info['requests'] as $request) {
                 $payload = $request->getPayload();
+                $rate = $request->getPackage()->getRate();
+                $failed = in_array($request->getService()->getCode(), Carrier::getRequests(Carrier::RATE_REQUEST_STATUS_FAILED, true));
                 $service = $request->getService()->getName() . ' (' . $request->getService()->getCode() . ')';
                 $from = sprintf('%s, %s, %s', $payload['fromPostalCode'], $payload['fromCity'], $payload['fromState']);
                 $to = sprintf('%s, %s', $payload['toPostalCode'], $payload['toCountry']);
-                $output->writeln('<info>ShipStation API Request Payload #' . $number++ . ':</info>');
+                $output->writeln('<info>ShipStation API Request/Package  #' . $number++ . ':</info>');
+                $output->writeln($failed ? '<error>Status: Failed</error>' : '<info>Status: Success</info>');
                 $output->writeln('<info>Service: ' . $service . '</info>');
                 $output->writeln('<info>Skus: ' . implode(',', $request->getPackage()->getProductsSkus()) . '</info>');
                 $output->writeln('<info>From: ' . $from . '</info>');
@@ -132,6 +136,11 @@ class CollectRatesCommand extends Command
                         continue;
                     }
                     $output->writeln('<info>' . ucfirst($dimension) . ': ' . $value . ' ' . $units . '</info>');
+                }
+                if ($rate) {
+                    $output->writeln('<info>Cost: ' . $rate->getShipmentCost() . '</info>');
+                    $output->writeln('<info>Other Cost: ' . $rate->getOtherCost() . '</info>');
+                    $output->writeln('<info>Adjusment Modifier: ' . $rate->getCostAdjustmentModifier() . '</info>');
                 }
                 $output->writeln(PHP_EOL);
             }

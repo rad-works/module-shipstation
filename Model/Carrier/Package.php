@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier;
 
+use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\DataObject;
 
@@ -38,6 +39,11 @@ class Package extends DataObject implements PackageInterface
         return array_map(fn($product) => $product->getSku(), $this->getProducts());
     }
 
+    public function getRate(): ?RateInterface
+    {
+        return $this->getData(self::FIELD_RATE);
+    }
+
     /**
      * @return ProductInterface[]
      */
@@ -69,6 +75,11 @@ class Package extends DataObject implements PackageInterface
     public function setWeight(int $weight): PackageInterface
     {
         return $this->setData(self::FIELD_WEIGHT, $weight);
+    }
+
+    public function setRate(?RateInterface $rate): PackageInterface
+    {
+        return $this->setData(self::FIELD_RATE, $rate);
     }
 
     /**

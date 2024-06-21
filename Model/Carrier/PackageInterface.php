@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier;
 
+use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 
 interface PackageInterface
@@ -12,6 +13,7 @@ interface PackageInterface
     public const FIELD_WIDTH = 'width';
     public const FIELD_HEIGHT = 'height';
     public const FIELD_WEIGHT = 'weight';
+    public const FIELD_RATE = 'rate';
     public const FIELD_PRODUCTS = 'products';
 
     public function getName(): ?string;
@@ -23,6 +25,11 @@ interface PackageInterface
     public function getHeight(): int;
 
     public function getWeight(): int;
+
+    /**
+     * @return ProductInterface[]
+     */
+    public function getRate(): ?RateInterface;
 
     /**
      * @return ProductInterface[]
@@ -43,6 +50,12 @@ interface PackageInterface
     public function setHeight(int $height): PackageInterface;
 
     public function setWeight(int $weight): PackageInterface;
+
+    /**
+     * @param RateInterface|null $rate
+     * @return PackageInterface
+     */
+    public function setRate(RateInterface|null $rate): PackageInterface;
 
     /**
      * @param ProductInterface[] $products
