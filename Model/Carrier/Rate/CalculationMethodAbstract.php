@@ -44,7 +44,7 @@ abstract class CalculationMethodAbstract implements RateCalculationMethodInterfa
             $rate->setServiceName($this->escaper->escapeHtml($rate->getServiceName()));
             $rate->setServiceCode($this->escaper->escapeHtml($rate->getServiceCode()));
             if ($service = $this->dataProvider->getServiceByCode($rate->getServiceCode())) {
-                $rates[] = $rate->setService($service);
+                $rates[$rate->getServiceCode()] = $rate->setService($service);
             }
         }
 
