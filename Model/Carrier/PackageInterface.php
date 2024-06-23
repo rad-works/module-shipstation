@@ -27,7 +27,14 @@ interface PackageInterface
     public function getWeight(): int;
 
     /**
-     * @return ProductInterface[]
+     * Get calculated value of a girth with length
+     *
+     * @return int
+     */
+    public function getGirthWithLength(): int;
+
+    /**
+     * @return RateInterface|null
      */
     public function getRate(): ?RateInterface;
 

@@ -335,14 +335,13 @@ class Carrier extends AuctaneCarrier
                 }
 
                 $request->getPackage()->setRate($rate);
-                $cost = ($rate->getShipmentCost() + $rate->getOtherCost()) * $rate->getCostAdjustmentModifier();
                 $rateMethod = $this->rateResultMethodFactory->create();
                 $rateMethod->setCarrier($carrier->getCarrierCode());
                 $rateMethod->setCarrierTitle($carrier->getConfigData('title'));
                 $rateMethod->setMethod($rate->getServiceCode());
                 $rateMethod->setMethodTitle($rate->getServiceName());
-                $rateMethod->setCost($cost);
-                $rateMethod->setPrice($cost);
+                $rateMethod->setCost($rate->getTotalCost());
+                $rateMethod->setPrice($rateMethod->getCost());
                 $rateResult->append($rateMethod);
             }
 

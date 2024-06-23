@@ -39,6 +39,16 @@ class Package extends DataObject implements PackageInterface
         return array_map(fn($product) => $product->getSku(), $this->getProducts());
     }
 
+    /**
+     * Formula: sum of two smaller dimensions multiplied by 2 with length added
+     *
+     * @return int
+     */
+    public function getGirthWithLength(): int
+    {
+        return $this->getLength() + ($this->getWidth() + $this->getHeight()) * 2;
+    }
+
     public function getRate(): ?RateInterface
     {
         return $this->getData(self::FIELD_RATE);

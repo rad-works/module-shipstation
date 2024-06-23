@@ -47,6 +47,13 @@ interface RateInterface extends EntityInterface
     public function getCostAdjustmentModifier(): float;
 
     /**
+     * Get total calculated cost of the rate
+     *
+     * @return float
+     */
+    public function getTotalCost(): float;
+
+    /**
      * Get rate related service model
      *
      * @return ServiceInterface

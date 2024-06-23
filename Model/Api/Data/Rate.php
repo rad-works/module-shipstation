@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace DmiRud\ShipStation\Model\Api\Data;
 
 use Magento\Framework\DataObject;
@@ -35,6 +36,11 @@ class Rate extends DataObject implements RateInterface
         }
 
         return self::DEFAULT_RATE_ADJUSTMENT_MODIFIER;
+    }
+
+    public function getTotalCost(): float
+    {
+        return $this->getCostAdjustmentModifier() * ($this->getShipmentCost() + $this->getOtherCost());
     }
 
     public function getService(): ServiceInterface

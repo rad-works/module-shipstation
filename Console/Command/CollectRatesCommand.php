@@ -131,6 +131,9 @@ class CollectRatesCommand extends Command
                 $output->writeln(
                     '<info>Weight: ' . $payload['weight']['value'] . ' ' . $payload['weight']['units'] . '</info>'
                 );
+                $output->writeln(
+                    '<info>Max Girth + Length: ' . $request->getPackage()->getGirthWithLength() . ' ' . $units . '</info>'
+                );
                 foreach ($payload['dimensions'] as $dimension => $value) {
                     if ($dimension == 'units') {
                         continue;
@@ -140,8 +143,10 @@ class CollectRatesCommand extends Command
                 if ($rate) {
                     $output->writeln('<info>Cost: ' . $rate->getShipmentCost() . '</info>');
                     $output->writeln('<info>Other Cost: ' . $rate->getOtherCost() . '</info>');
-                    $output->writeln('<info>Adjusment Modifier: ' . $rate->getCostAdjustmentModifier() . '</info>');
+                    $output->writeln('<info>Cost Adjustment Modifier: ' . $rate->getCostAdjustmentModifier() . '</info>');
+                    $output->writeln('<info>Total Cost: ' . $rate->getTotalCost() . '</info>');
                 }
+
                 $output->writeln(PHP_EOL);
             }
         }

@@ -42,15 +42,17 @@ class PackageBuilder implements PackageBuilderInterface
                 self::XML_PATHS_DIMENSIONS
             )
         );
+
         if (!$service->getRestrictions()
             ||
             $package->getLength() >= $service->getRestrictions()->getMaxLength()
             ||
             $package->getWeight() >= $service->getRestrictions()->getMaxWeight()
+            ||
+            $package->getGirthWithLength() >= $service->getRestrictions()->getMaxLengthWithGirth()
         ) {
             throw new NoPackageCreatedForService($service);
         }
-
 
         return $package;
     }
