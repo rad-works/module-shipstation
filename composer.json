@@ -7,7 +7,7 @@
     "php": "~8.1.0",
     "auctane/api": "2.4.*",
     "thesgroup/module-shipping-origin": "^1.0",
-    "magento/framework": "^103.0.0",
+    "magento/framework": "103.0.*",
     "dvdoug/boxpacker": "~3.12.1"
   },
   "license": [
