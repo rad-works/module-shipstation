@@ -36,19 +36,23 @@ class PackageBuilder implements PackageBuilderInterface
         $package->setName($service->getInternalCode());
         $package->setProducts([$product]);
         $package->setWeight((int)$product->getWeight());
-        $package->setDimensions(array_map(
-            fn($configPath) => (int)$product->getData($this->scopeConfig->getValue($configPath)),
-            self::XML_PATHS_DIMENSIONS
-        ));
+        $package->setDimensions(
+            array_map(
+                fn($configPath) => (int)$product->getData($this->scopeConfig->getValue($configPath)),
+                self::XML_PATHS_DIMENSIONS
+            )
+        );
+
         if (!$service->getRestrictions()
             ||
             $package->getLength() >= $service->getRestrictions()->getMaxLength()
             ||
             $package->getWeight() >= $service->getRestrictions()->getMaxWeight()
+            ||
+            $package->getGirthWithLength() >= $service->getRestrictions()->getMaxLengthWithGirth()
         ) {
             throw new NoPackageCreatedForService($service);
         }
-
 
         return $package;
     }

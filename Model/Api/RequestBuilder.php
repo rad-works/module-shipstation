@@ -16,8 +16,7 @@ class RequestBuilder implements RequestBuilderInterface
     public function __construct(
         private readonly RequestInterfaceFactory $requestFactory,
         private readonly SerializerInterface     $serializer
-    )
-    {
+    ) {
     }
 
     public function build(PackageInterface $package, ServiceInterface $service, DataObject $rawRateRequest): RequestInterface
@@ -44,9 +43,8 @@ class RequestBuilder implements RequestBuilderInterface
             ]
         ];
 
-        $request->setId(md5($this->serializer->serialize($payload)));
-        $request->setPayload($payload);
         $request->setPayloadSerialized($this->serializer->serialize($payload));
+        $request->setPayload($payload);
         $request->setPackage($package);
         $request->setService($service);
 

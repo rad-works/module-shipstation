@@ -23,10 +23,13 @@ class AddServiceRestrictionsToService
         private readonly ScopeConfigInterface                $scopeConfig,
         private readonly SerializerInterface                 $serializer,
         private readonly ServiceRestrictionsInterfaceFactory $serviceRestrictionsFactory
-    ) {
+    )
+    {
     }
 
     /**
+     * Add ServiceRestrictions to Service model
+     *
      * @param ApiDataProviderInterface $dataProvider
      * @param array $services
      * @return array
@@ -44,8 +47,8 @@ class AddServiceRestrictionsToService
             }
 
             $values[$fullCode][ServiceRestrictionsInterface::FIELD_SERVICE] = $service;
-            $values[$fullCode][ServiceRestrictionsInterface::FIELD_SUBTOTAL_ADJUSTMENT] =
-                $values[$fullCode][ServiceRestrictionsInterface::FIELD_SUBTOTAL_ADJUSTMENT] ?: 0.0;
+            $subTotalAdjustment = $values[$fullCode][ServiceRestrictionsInterface::FIELD_SUBTOTAL_ADJUSTMENT];
+            $values[$fullCode][ServiceRestrictionsInterface::FIELD_SUBTOTAL_ADJUSTMENT] = $subTotalAdjustment ?: 0.0;
             $serviceRestrictions = $this->serviceRestrictionsFactory->create();
             $this->dataObjectHelper->populateWithArray($serviceRestrictions, $values[$fullCode], ServiceRestrictionsInterface::class);
             $service->setRestrictions($serviceRestrictions);

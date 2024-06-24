@@ -32,11 +32,15 @@
         <plugin name="DmiRud_ShipStation::add_service_restrictions_to_service"
                 type="DmiRud\ShipStation\Plugin\Model\Api\DataProviderInterface\AddServiceRestrictionsToService"/>
     </type>
-
+    <type name="Magento\Shipping\Model\Shipping">
+        <plugin name="shippingOriginRequest" type="TheSGroup\ShippingOrigin\Plugin\Shipping\Model\ShippingPlugin" disabled="true" />
+        <plugin name="DmiRud_ShipStation::collect_rates_based_source" type="DmiRud\ShipStation\Plugin\Shipping\Model\Shipping\CollectRatesBasedOnInventorySource" />
+    </type>
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="DmiRud_ShipStation::collect_rates" xsi:type="object">DmiRud\ShipStation\Console\Command\CollectRatesCommand</item>
+                <item name="DmiRud_ShipStation::collect-rates" xsi:type="object">DmiRud\ShipStation\Console\Command\CollectRatesCommand</item>
+                <item name="DmiRud_ShipStation::products-dimensions" xsi:type="object">DmiRud\ShipStation\Console\Command\ListProductsDimensionsCommand</item>
             </argument>
         </arguments>
     </type>

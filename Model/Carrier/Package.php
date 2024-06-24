@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Model\Carrier;
 
+use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\DataObject;
 
@@ -31,6 +32,26 @@ class Package extends DataObject implements PackageInterface
     public function getWeight(): int
     {
         return $this->getData(self::FIELD_WEIGHT) ?: 0;
+    }
+
+    public function getProductsSkus(): array
+    {
+        return array_map(fn($product) => $product->getSku(), $this->getProducts());
+    }
+
+    /**
+     * Formula: sum of two smaller dimensions multiplied by 2 with length added
+     *
+     * @return int
+     */
+    public function getGirthWithLength(): int
+    {
+        return $this->getLength() + ($this->getWidth() + $this->getHeight()) * 2;
+    }
+
+    public function getRate(): ?RateInterface
+    {
+        return $this->getData(self::FIELD_RATE);
     }
 
     /**
@@ -66,6 +87,11 @@ class Package extends DataObject implements PackageInterface
         return $this->setData(self::FIELD_WEIGHT, $weight);
     }
 
+    public function setRate(?RateInterface $rate): PackageInterface
+    {
+        return $this->setData(self::FIELD_RATE, $rate);
+    }
+
     /**
      * @param ProductInterface[] $products
      * @return PackageInterface
@@ -80,6 +106,8 @@ class Package extends DataObject implements PackageInterface
         //Sort dimensions by size
         rsort($dimensions);
         //Combine dimensions according to the order in constant; the length have the largest value
-        return $this->addData(array_combine(array_keys(PackageBuilder::XML_PATHS_DIMENSIONS), $dimensions));
+        return $this->addData(
+            array_combine(array_keys(PackageBuilder::XML_PATHS_DIMENSIONS), $dimensions)
+        );
     }
 }

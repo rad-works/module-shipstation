@@ -16,8 +16,7 @@ class Item extends TestItem
         int              $weight,
         int              $allowedRotation,
         ProductInterface $product
-    )
-    {
+    ) {
         $this->product = $product;
         parent::__construct($description, $width, $length, $depth, $weight, $allowedRotation);
     }

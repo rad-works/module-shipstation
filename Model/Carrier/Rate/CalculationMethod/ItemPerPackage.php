@@ -8,11 +8,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Address\Item;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use Magento\Shipping\Model\Rate\PackageResult;
-use Magento\Shipping\Model\Rate\Result as RateResult;
 use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Carrier;
 use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethodAbstract;
 
 class ItemPerPackage extends CalculationMethodAbstract
@@ -26,7 +23,6 @@ class ItemPerPackage extends CalculationMethodAbstract
      * @param DataObject $rawRateRequest
      * @return RequestInterface[]
      * @throws NoServiceFoundForProduct|NoSuchEntityException
-     * @TODO add integrity validation logic for a case in which products have different carriers available
      */
     public function collectRequests(RateRequest $rateRequest, DataObject $rawRateRequest): array
     {
@@ -47,7 +43,7 @@ class ItemPerPackage extends CalculationMethodAbstract
                         $service,
                         $rawRateRequest
                     );
-                    $qty = $item->getQty();
+                    $qty = $item->getQty() ?: $item->getQtyToAdd();
                     while ($qty--) {
                         $itemRequests[] = $request;
                     }

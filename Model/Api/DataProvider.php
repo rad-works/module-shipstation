@@ -32,8 +32,7 @@ class DataProvider implements DataProviderInterface
         private readonly ServiceInterfaceFactory $serviceFactory,
         private readonly ScopeConfigInterface    $scopeConfig,
         private readonly DataObjectHelper        $dataObjectHelper
-    )
-    {
+    ) {
     }
 
     /**
