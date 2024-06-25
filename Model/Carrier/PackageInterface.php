@@ -31,7 +31,7 @@ interface PackageInterface
      *
      * @return int
      */
-    public function getGirthWithLength(): int;
+    public function getLengthWithGirth(): int;
 
     /**
      * @return RateInterface|null

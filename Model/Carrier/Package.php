@@ -44,9 +44,9 @@ class Package extends DataObject implements PackageInterface
      *
      * @return int
      */
-    public function getGirthWithLength(): int
+    public function getLengthWithGirth(): int
     {
-        return $this->getLength() + ($this->getWidth() + $this->getHeight()) * 2;
+        return self::calculateLengthWithGirth($this->getLength(), $this->getWidth(), $this->getHeight());
     }
 
     public function getRate(): ?RateInterface
@@ -103,11 +103,27 @@ class Package extends DataObject implements PackageInterface
 
     public function setDimensions(array $dimensions): PackageInterface
     {
+        return $this->addData(self::resetDimensions($dimensions));
+    }
+
+    public static function resetDimensions(array $dimensions): array
+    {
         //Sort dimensions by size
         rsort($dimensions);
         //Combine dimensions according to the order in constant; the length have the largest value
-        return $this->addData(
-            array_combine(array_keys(PackageBuilder::XML_PATHS_DIMENSIONS), $dimensions)
-        );
+        return array_combine(array_keys(PackageBuilder::XML_PATHS_DIMENSIONS), $dimensions);
+    }
+
+    /**
+     * Formula: sum of two smaller dimensions multiplied by 2 with length added
+     *
+     * @param int|float $length
+     * @param int|float $width
+     * @param int|float $height
+     * @return int
+     */
+    public static function calculateLengthWithGirth(int|float $length, int|float $width, int|float $height): int
+    {
+        return (int)($length + ($width + $height) * 2);
     }
 }

@@ -49,7 +49,7 @@ class PackageBuilder implements PackageBuilderInterface
             ||
             $package->getWeight() >= $service->getRestrictions()->getMaxWeight()
             ||
-            $package->getGirthWithLength() >= $service->getRestrictions()->getMaxLengthWithGirth()
+            $package->getLengthWithGirth() >= $service->getRestrictions()->getMaxLengthWithGirth()
         ) {
             throw new NoPackageCreatedForService($service);
         }

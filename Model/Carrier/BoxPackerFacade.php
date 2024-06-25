@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DmiRud\ShipStation\Model\Carrier;
 
 use DmiRud\ShipStation\Model\Carrier\BoxPacker\Item;
+use DmiRud\ShipStation\Model\Carrier\BoxPacker\PackedBoxSorter;
 use DVDoug\BoxPacker\PackedBox;
 use DVDoug\BoxPacker\Packer;
 use DVDoug\BoxPacker\Rotation;
@@ -25,37 +26,30 @@ class BoxPackerFacade implements BoxPackerInterface
     public function pack(ServiceRestrictionsInterface $serviceRestrictions, array $packages): array
     {
         $packer = new Packer();
+        $packer->setPackedBoxSorter(new PackedBoxSorter());
+        [$length, $width, $height] = $this->prepareBoxDimensions($packages, $serviceRestrictions->getMaxLengthWithGirth());
         $packer->addBox(
             new TestBox(
                 reference: $serviceRestrictions->getService()->getInternalCode(),
-                outerWidth: $serviceRestrictions->getMaxLength(),
-                outerLength: $serviceRestrictions->getMaxLength(),
-                outerDepth: $serviceRestrictions->getMaxLength(),
+                outerWidth: $width,
+                outerLength: $length,
+                outerDepth: $height,
                 emptyWeight: 0,
-                innerWidth: $serviceRestrictions->getMaxLength(),
-                innerLength: $serviceRestrictions->getMaxLength(),
-                innerDepth: $serviceRestrictions->getMaxLength(),
+                innerWidth: $width,
+                innerLength: $length,
+                innerDepth: $height,
                 maxWeight: $serviceRestrictions->getMaxWeight()
             )
         );
         foreach ($packages as $package) {
             $product = current($package->getProducts());
-            $packer->addItem(new Item(
-                description: $product->getSku(),
-                width: $package->getWidth(),
-                length: $package->getLength(),
-                depth: $package->getHeight(),
-                weight: $package->getWeight(),
-                allowedRotation: Rotation::BestFit,
-                product: $product
-            ));
+            $packer->addItem(new Item($package, $product, Rotation::BestFit));
         }
 
         $packages = [];
         $packedBoxes = $packer->pack();
         /** @var PackedBox $packedBox */
         foreach ($packedBoxes as $packedBox) {
-            /** @var PackageInterface $package */
             $package = $this->packageFactory->create();
             $package->setName($serviceRestrictions->getService()->getInternalCode());
             $package->setProducts(
@@ -71,5 +65,34 @@ class BoxPackerFacade implements BoxPackerInterface
         }
 
         return $packages;
+    }
+
+    /**
+     * Prepare rough estimate of a box/container dimensions
+     *
+     * @param array $packages
+     * @param int $maxLengthWithGirth
+     * @return array
+     */
+    private function prepareBoxDimensions(array $packages, int $maxLengthWithGirth): array
+    {
+        $length = $width = $height = 0;
+        foreach ($packages as $package) {
+            if ($length < $package->getLength()) {
+                $length = $package->getLength();
+            }
+
+            if ($width < $package->getWidth()) {
+                $width = $package->getWidth();
+            }
+
+            $height += $package->getHeight();
+        }
+
+        while (Package::calculateLengthWithGirth($length, $width, $height) >= $maxLengthWithGirth) {
+            $height -= 1;
+        }
+
+        return [$length, $width, $height];
     }
 }

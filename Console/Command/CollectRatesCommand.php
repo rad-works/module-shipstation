@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DmiRud\ShipStation\Console\Command;
 
-use DmiRud\ShipStation\Model\Api\Data\RateInterface;
 use DmiRud\ShipStation\Model\Api\RequestInterface;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Symfony\Component\Console\Helper\Table;
@@ -121,7 +120,7 @@ class CollectRatesCommand extends Command
                 $service = $request->getService()->getName() . ' (' . $request->getService()->getCode() . ')';
                 $from = sprintf('%s, %s, %s', $payload['fromPostalCode'], $payload['fromCity'], $payload['fromState']);
                 $to = sprintf('%s, %s', $payload['toPostalCode'], $payload['toCountry']);
-                $output->writeln('<info>ShipStation API Request/Package  #' . $number++ . ':</info>');
+                $output->writeln('<info>ShipStation API Request/Package  #' . $number++ . '</info>');
                 $output->writeln($failed ? '<error>Status: Failed</error>' : '<info>Status: Success</info>');
                 $output->writeln('<info>Service: ' . $service . '</info>');
                 $output->writeln('<info>Skus: ' . implode(',', $request->getPackage()->getProductsSkus()) . '</info>');
@@ -132,7 +131,7 @@ class CollectRatesCommand extends Command
                     '<info>Weight: ' . $payload['weight']['value'] . ' ' . $payload['weight']['units'] . '</info>'
                 );
                 $output->writeln(
-                    '<info>Max Girth + Length: ' . $request->getPackage()->getGirthWithLength() . ' ' . $units . '</info>'
+                    '<info>Max Girth + Length: ' . $request->getPackage()->getLengthWithGirth() . ' ' . $units . '</info>'
                 );
                 foreach ($payload['dimensions'] as $dimension => $value) {
                     if ($dimension == 'units') {
