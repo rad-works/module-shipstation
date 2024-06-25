@@ -226,19 +226,15 @@ class Carrier extends AuctaneCarrier
         $rowRequest->setOrigRegionCode(
             is_numeric($origRegionCode) ? $this->_regionFactory->create()->load($origRegionCode)->getCode() : $origRegionCode
         );
-        $rowRequest->setOrigCity($request->getOrigCity() ?: $rowRequest->setOrigCity(
-            $this->_scopeConfig->getValue(
-                OrderShipment::XML_PATH_STORE_CITY,
-                ScopeInterface::SCOPE_STORE,
-                $request->getStoreId()
-            )
+        $rowRequest->setOrigCity($request->getOrigCity() ?: $this->_scopeConfig->getValue(
+            OrderShipment::XML_PATH_STORE_CITY,
+            ScopeInterface::SCOPE_STORE,
+            $request->getStoreId()
         ));
-        $rowRequest->setOrigPostal($request->getOrigPostcode() ?: $rowRequest->setOrigPostal(
-            $this->_scopeConfig->getValue(
-                OrderShipment::XML_PATH_STORE_ZIP,
-                ScopeInterface::SCOPE_STORE,
-                $request->getStoreId()
-            )
+        $rowRequest->setOrigPostal($request->getOrigPostcode() ?: $this->_scopeConfig->getValue(
+            OrderShipment::XML_PATH_STORE_ZIP,
+            ScopeInterface::SCOPE_STORE,
+            $request->getStoreId()
         ));
         $destCountry = $request->getDestCountryId() ?: self::USA_COUNTRY_ID;
         $rowRequest->setDestCountry(

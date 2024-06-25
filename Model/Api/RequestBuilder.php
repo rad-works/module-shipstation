@@ -21,7 +21,6 @@ class RequestBuilder implements RequestBuilderInterface
 
     public function build(PackageInterface $package, ServiceInterface $service, DataObject $rawRateRequest): RequestInterface
     {
-        /** @var RequestInterface $request */
         $request = $this->requestFactory->create();
         $payload = [
             'carrierCode' => $service->getCarrierCode(),
