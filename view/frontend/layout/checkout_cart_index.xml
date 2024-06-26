@@ -14,6 +14,17 @@
                                 </item>
                             </item>
                         </item>
+                        <item name="summary-block-config" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="shipping-rates-validation" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipstation-rates-validation" xsi:type="array">
+                                            <item name="component" xsi:type="string">DmiRud_ShipStation/js/view/shipping-rates-validation/shipstation</item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
                     </item>
                 </argument>
             </arguments>
