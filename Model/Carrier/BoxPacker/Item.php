@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DmiRud\ShipStation\Model\Carrier\BoxPacker;
 
 use DmiRud\ShipStation\Model\Carrier\PackageInterface;
+use DVDoug\BoxPacker\Rotation;
 use DVDoug\BoxPacker\Test\TestItem;
 use Magento\Catalog\Api\Data\ProductInterface;
 
@@ -12,7 +13,7 @@ class Item extends TestItem
     private PackageInterface $package;
     private ProductInterface $product;
 
-    public function __construct(PackageInterface $package, ProductInterface $product, int $allowedRotation)
+    public function __construct(PackageInterface $package, ProductInterface $product)
     {
         $this->package = $package;
         $this->product = $product;
@@ -22,7 +23,7 @@ class Item extends TestItem
             $this->package->getLength(),
             $this->package->getHeight(),
             $this->package->getWeight(),
-            $allowedRotation
+            Rotation::KeepFlat
         );
     }
 
