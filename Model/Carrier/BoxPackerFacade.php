@@ -7,7 +7,6 @@ use DmiRud\ShipStation\Model\Carrier\BoxPacker\Item;
 use DmiRud\ShipStation\Model\Carrier\BoxPacker\PackedBoxSorter;
 use DVDoug\BoxPacker\PackedBox;
 use DVDoug\BoxPacker\Packer;
-use DVDoug\BoxPacker\Rotation;
 use DVDoug\BoxPacker\Test\TestBox;
 
 class BoxPackerFacade implements BoxPackerInterface
@@ -43,7 +42,7 @@ class BoxPackerFacade implements BoxPackerInterface
         );
         foreach ($packages as $package) {
             $product = current($package->getProducts());
-            $packer->addItem(new Item($package, $product, Rotation::BestFit));
+            $packer->addItem(new Item($package, $product));
         }
 
         $packages = [];
@@ -68,7 +67,7 @@ class BoxPackerFacade implements BoxPackerInterface
     }
 
     /**
-     * Prepare rough estimate of a box/container dimensions
+     * Prepare approximate box/container dimensions
      *
      * @param array $packages
      * @param int $maxLengthWithGirth
