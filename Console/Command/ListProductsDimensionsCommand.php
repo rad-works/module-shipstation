@@ -31,8 +31,7 @@ class ListProductsDimensionsCommand extends Command
         SearchCriteriaBuilder      $searchCriteriaBuilder,
         ScopeConfigInterface       $scopeConfig,
         string                     $name = self::NAME
-    )
-    {
+    ) {
         parent::__construct($name);
         $this->filterBuilder = $filterBuilder;
         $this->productRepository = $productRepository;

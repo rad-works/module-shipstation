@@ -103,8 +103,7 @@ class Carrier extends AuctaneCarrier
         ProxyDeferredFactory         $proxyDeferredFactory,
         Json                         $serializer,
         array                        $data = []
-    )
-    {
+    ) {
         parent::__construct(
             $scopeConfig,
             $logger,

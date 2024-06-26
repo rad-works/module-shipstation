@@ -23,8 +23,7 @@ class AddServiceRestrictionsToService
         private readonly ScopeConfigInterface                $scopeConfig,
         private readonly SerializerInterface                 $serializer,
         private readonly ServiceRestrictionsInterfaceFactory $serviceRestrictionsFactory
-    )
-    {
+    ) {
     }
 
     /**
