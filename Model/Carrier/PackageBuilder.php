@@ -26,8 +26,7 @@ class PackageBuilder implements PackageBuilderInterface
         private readonly BoxPackerInterface      $boxPacker,
         private readonly PackageInterfaceFactory $packageFactory,
         private readonly ScopeConfigInterface    $scopeConfig
-    )
-    {
+    ) {
     }
 
     public function build(ServiceInterface $service, ProductInterface $product): PackageInterface

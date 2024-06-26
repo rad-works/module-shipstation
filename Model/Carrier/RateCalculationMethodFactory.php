@@ -19,7 +19,6 @@ class RateCalculationMethodFactory
     {
     }
 
-
     /**
      * Get rate calculation method instance
      *
