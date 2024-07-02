@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod;
 
 use DmiRud\ShipStation\Exception\NoPackageCreatedForService;
+use Magento\Catalog\Model\Product\Type\Simple;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Address\Item;
@@ -30,7 +31,7 @@ class ItemsPerPackage extends ItemPerPackage
         $products = [];
         /** @var Item $item */
         foreach ($rateRequest->getAllItems() as $item) {
-            if ($item->getParentItemId()) {
+            if ($item->getParentItemId() || $item->getProduct()->isVirtual()) {
                 continue;
             }
 
@@ -51,7 +52,7 @@ class ItemsPerPackage extends ItemPerPackage
             }
         }
 
-        if (!$requests) {
+        if ($products && !$requests) {
             throw new NoServiceFoundForProduct;
         }
 

@@ -30,7 +30,7 @@ class ItemPerPackage extends CalculationMethodAbstract
         $countryCode = $rawRateRequest->getDestCountry();
         /** @var Item $item */
         foreach ($rateRequest->getAllItems() as $item) {
-            if ($item->getParentItemId()) {
+            if ($item->getParentItemId() || $item->getProduct()->isVirtual()) {
                 continue;
             }
 

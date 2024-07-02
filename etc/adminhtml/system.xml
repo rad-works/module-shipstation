@@ -37,7 +37,7 @@
                 <field id="rates_cache_lifetime" translate="label comment" type="text" sortOrder="160" showInDefault="1">
                     <label>Rates Cache Lifetime</label>
                     <backend_model>Magento\Cookie\Model\Config\Backend\Lifetime</backend_model>
-                    <comment><![CDATA[Cache returned by ShipStation API rates data in seconds.]]></comment>
+                    <comment><![CDATA[Cache ShipStation API rates data in seconds.]]></comment>
                     <config_path>carriers/shipstation/rates_response_cache_lifetime</config_path>
                     <validate>validate-number</validate>
                     <depends>

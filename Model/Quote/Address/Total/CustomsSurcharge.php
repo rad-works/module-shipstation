@@ -59,8 +59,7 @@ class CustomsSurcharge extends AbstractTotal
         $total->setBaseTotalAmount($this->getCode(), $surcharge);
         $address->setShippingSurchargeAmount($total->getTotalAmount($this->getCode()));
         $address->setBaseShippingSurchargeAmount($total->getBaseTotalAmount($this->getCode()));
-//        'userid' => '2507ODDBA9F29',
-//                    'password' => 'HV649680TQ8096T'
+
         return $this;
     }
 
