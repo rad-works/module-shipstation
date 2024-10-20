@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Console\Command;
+namespace RadWorks\ShipStation\Console\Command;
 
-use DmiRud\ShipStation\Model\Api\RequestInterface;
+use RadWorks\ShipStation\Model\Api\RequestInterface;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,8 +12,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use Magento\Framework\Console\Cli;
-use DmiRud\ShipStation\Console\Command\CollectRates\RatesProviderFactory;
-use DmiRud\ShipStation\Model\Carrier;
+use RadWorks\ShipStation\Console\Command\CollectRates\RatesProviderFactory;
+use RadWorks\ShipStation\Model\Carrier;
 
 class CollectRatesCommand extends Command
 {

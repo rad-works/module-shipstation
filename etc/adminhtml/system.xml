@@ -16,7 +16,7 @@
                 <field id="api_type" translate="label" type="select" sortOrder="140" showInDefault="1"
                        canRestore="1">
                     <label>Rates Calculation API Type</label>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\ApiType</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\ApiType</source_model>
                     <config_path>carriers/shipstation/api_type</config_path>
                     <comment><![CDATA[Select ShipStation's API for shipping rates calculation.]]></comment>
                 </field>
@@ -47,7 +47,7 @@
                 <field id="active_services" translate="label" type="multiselect" sortOrder="170" showInDefault="1">
                     <label>Active Services</label>
                     <config_path>carriers/shipstation/active_services</config_path>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\Services</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\Services</source_model>
                     <can_be_empty>1</can_be_empty>
                     <comment>
                         <![CDATA[The listed services are fetched from the API. Please clear the Magento cache to reload the services for newly added carriers in the ShipStation cabinet.]]>
@@ -59,7 +59,7 @@
                 <field id="length" translate="label" type="select" sortOrder="180" showInDefault="1" canRestore="1">
                     <label>Length</label>
                     <config_path>carriers/shipstation/dimension_length</config_path>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\ProductAttribute</source_model>
                     <depends>
                         <field id="*/shipstation/api_type">shipstation_api</field>
                     </depends>
@@ -67,7 +67,7 @@
                 <field id="width" translate="label" type="select" sortOrder="181" showInDefault="1" canRestore="1">
                     <label>Width</label>
                     <config_path>carriers/shipstation/dimension_width</config_path>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\ProductAttribute</source_model>
                     <depends>
                         <field id="*/shipstation/api_type">shipstation_api</field>
                     </depends>
@@ -75,7 +75,7 @@
                 <field id="height" translate="label" type="select" sortOrder="182" showInDefault="1" canRestore="1">
                     <label>Height</label>
                     <config_path>carriers/shipstation/dimension_height</config_path>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\ProductAttribute</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\ProductAttribute</source_model>
                     <depends>
                         <field id="*/shipstation/api_type">shipstation_api</field>
                     </depends>
@@ -84,14 +84,14 @@
                        canRestore="1">
                     <label>Rate Calculation Method</label>
                     <config_path>carriers/shipstation/rate_calculation_method</config_path>
-                    <source_model>DmiRud\ShipStation\Model\Config\Source\RateCalculationMethod</source_model>
+                    <source_model>RadWorks\ShipStation\Model\Config\Source\RateCalculationMethod</source_model>
                     <depends>
                         <field id="*/shipstation/api_type">shipstation_api</field>
                     </depends>
                 </field>
                 <field id="service_restrictions" translate="label" sortOrder="195" showInDefault="1" canRestore="1">
                     <label>Carrier Size Restrictions</label>
-                    <frontend_model>DmiRud\ShipStation\Block\Adminhtml\Form\Field\ServiceRestrictions</frontend_model>
+                    <frontend_model>RadWorks\ShipStation\Block\Adminhtml\Form\Field\ServiceRestrictions</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                     <config_path>carriers/shipstation/service_restrictions</config_path>
                     <depends>

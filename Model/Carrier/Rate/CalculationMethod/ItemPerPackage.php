@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod;
+namespace RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethod;
 
-use DmiRud\ShipStation\Exception\NoPackageCreatedForService;
+use RadWorks\ShipStation\Exception\NoPackageCreatedForService;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Address\Item;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
-use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethodAbstract;
+use RadWorks\ShipStation\Exception\NoServiceFoundForProduct;
+use RadWorks\ShipStation\Model\Api\RequestInterface;
+use RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethodAbstract;
 
 class ItemPerPackage extends CalculationMethodAbstract
 {

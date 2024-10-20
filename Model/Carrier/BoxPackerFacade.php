@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier;
+namespace RadWorks\ShipStation\Model\Carrier;
 
-use DmiRud\ShipStation\Model\Carrier\BoxPacker\Item;
-use DmiRud\ShipStation\Model\Carrier\BoxPacker\PackedBoxSorter;
+use RadWorks\ShipStation\Model\Carrier\BoxPacker\Item;
+use RadWorks\ShipStation\Model\Carrier\BoxPacker\PackedBoxSorter;
 use DVDoug\BoxPacker\PackedBox;
 use DVDoug\BoxPacker\Packer;
 use DVDoug\BoxPacker\Test\TestBox;

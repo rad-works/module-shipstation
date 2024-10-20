@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Exception;
+namespace RadWorks\ShipStation\Exception;
 
 use Magento\Framework\Exception\LocalizedException;
-use DmiRud\ShipStation\Model\Carrier\PackageInterface;
+use RadWorks\ShipStation\Model\Carrier\PackageInterface;
 
 class NoServiceFoundForProduct extends LocalizedException
 {

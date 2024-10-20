@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Plugin\Model\Carrier;
+namespace RadWorks\ShipStation\Plugin\Model\Carrier;
 
 use Magento\Framework\DataObject;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
-use DmiRud\ShipStation\Model\Carrier;
+use RadWorks\ShipStation\Model\Carrier;
 
 /**
  * Allows the restriction of shipping methods based on the requester's IP address.

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier\BoxPacker;
+namespace RadWorks\ShipStation\Model\Carrier\BoxPacker;
 
-use DmiRud\ShipStation\Model\Carrier\PackageInterface;
+use RadWorks\ShipStation\Model\Carrier\PackageInterface;
 use DVDoug\BoxPacker\Rotation;
 use DVDoug\BoxPacker\Test\TestItem;
 use Magento\Catalog\Api\Data\ProductInterface;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Api;
+namespace RadWorks\ShipStation\Model\Api;
 
 use Magento\Framework\Api\SimpleDataObjectConverter;
 use Magento\Framework\App\CacheInterface;
@@ -12,7 +12,7 @@ use Magento\Framework\HTTP\AsyncClient\Request;
 use Magento\Framework\HTTP\AsyncClientInterface as HttpAsyncClientInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Throwable;
-use DmiRud\ShipStation\Model\Cache\Type\ApiResponse;
+use RadWorks\ShipStation\Model\Cache\Type\ApiResponse;
 
 class Client implements AsyncClientInterface
 {

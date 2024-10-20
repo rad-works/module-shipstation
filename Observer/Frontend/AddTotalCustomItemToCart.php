@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Observer\Frontend;
+namespace RadWorks\ShipStation\Observer\Frontend;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;

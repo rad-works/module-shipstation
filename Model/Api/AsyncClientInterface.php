@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Api;
+namespace RadWorks\ShipStation\Model\Api;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\HTTP\AsyncClient\HttpResponseDeferredInterface;

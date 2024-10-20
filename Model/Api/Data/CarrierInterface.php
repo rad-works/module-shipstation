@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Api\Data;
+namespace RadWorks\ShipStation\Model\Api\Data;
 
 interface CarrierInterface extends EntityInterface
 {

@@ -9,7 +9,7 @@ define(
         "use strict";
         return Component.extend({
             defaults: {
-                template: 'DmiRud_ShipStation/checkout/cart/totals/customs-surcharge'
+                template: 'RadWorks_ShipStation/checkout/cart/totals/customs-surcharge'
             },
 
             totals: quote.getTotals(),

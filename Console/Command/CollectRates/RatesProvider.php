@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Console\Command\CollectRates;
+namespace RadWorks\ShipStation\Console\Command\CollectRates;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Area;
@@ -11,7 +11,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Store\Model\App\Emulation as StoreEmulation;
-use DmiRud\ShipStation\Model\Carrier;
+use RadWorks\ShipStation\Model\Carrier;
 
 class RatesProvider
 {

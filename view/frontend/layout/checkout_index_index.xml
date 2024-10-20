@@ -15,7 +15,7 @@
                                                 <item name="totals" xsi:type="array">
                                                     <item name="children" xsi:type="array">
                                                         <item name="customs_surcharge" xsi:type="array">
-                                                            <item name="component" xsi:type="string">DmiRud_ShipStation/js/view/cart/totals/customs-surcharge</item>
+                                                            <item name="component" xsi:type="string">RadWorks_ShipStation/js/view/cart/totals/customs-surcharge</item>
                                                             <item name="sortOrder" xsi:type="string">30</item>
                                                         </item>
                                                     </item>
@@ -33,7 +33,7 @@
                                                         <item name="shipping-rates-validation" xsi:type="array">
                                                             <item name="children" xsi:type="array">
                                                                 <item name="shipstation-rates-validation" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">DmiRud_ShipStation/js/view/shipping-rates-validation/shipstation</item>
+                                                                    <item name="component" xsi:type="string">RadWorks_ShipStation/js/view/shipping-rates-validation/shipstation</item>
                                                                 </item>
                                                             </item>
                                                         </item>

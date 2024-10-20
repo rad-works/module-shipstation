@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier;
+namespace RadWorks\ShipStation\Model\Carrier;
 
-use DmiRud\ShipStation\Model\Api\Data\RateInterface;
+use RadWorks\ShipStation\Model\Api\Data\RateInterface;
 use Magento\Framework\DataObject;
 use Magento\Quote\Model\Quote\Address\RateRequest;
-use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
-use DmiRud\ShipStation\Model\Api\RequestInterface;
+use RadWorks\ShipStation\Exception\NoServiceFoundForProduct;
+use RadWorks\ShipStation\Model\Api\RequestInterface;
 
 interface RateCalculationMethodInterface
 {

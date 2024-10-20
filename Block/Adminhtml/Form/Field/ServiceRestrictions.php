@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Block\Adminhtml\Form\Field;
+namespace RadWorks\ShipStation\Block\Adminhtml\Form\Field;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
@@ -9,10 +9,10 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Framework\View\Helper\SecureHtmlRenderer;
-use DmiRud\ShipStation\Block\Adminhtml\Form\Field\Renderer\ActiveServices;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface;
-use DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
-use DmiRud\ShipStation\Model\Config\Source\Services;
+use RadWorks\ShipStation\Block\Adminhtml\Form\Field\Renderer\ActiveServices;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface;
+use RadWorks\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
+use RadWorks\ShipStation\Model\Config\Source\Services;
 
 class ServiceRestrictions extends AbstractFieldArray
 {

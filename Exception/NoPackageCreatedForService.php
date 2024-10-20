@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Exception;
+namespace RadWorks\ShipStation\Exception;
 
-use DmiRud\ShipStation\Model\Api\Data\ServiceInterface;
+use RadWorks\ShipStation\Model\Api\Data\ServiceInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 class NoPackageCreatedForService extends LocalizedException

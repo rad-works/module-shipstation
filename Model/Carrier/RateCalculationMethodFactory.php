@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier;
+namespace RadWorks\ShipStation\Model\Carrier;
 
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemsPerPackage;
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
+use RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemsPerPackage;
+use RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
 use Exception;
 use Magento\Framework\ObjectManagerInterface;
 

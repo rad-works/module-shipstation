@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Plugin\Shipping\Model\Shipping;
+namespace RadWorks\ShipStation\Plugin\Shipping\Model\Shipping;
 
-use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Carrier;
+use RadWorks\ShipStation\Model\Api\RequestInterface;
+use RadWorks\ShipStation\Model\Carrier;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;

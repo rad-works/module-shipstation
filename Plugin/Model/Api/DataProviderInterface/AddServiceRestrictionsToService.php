@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Plugin\Model\Api\DataProviderInterface;
+namespace RadWorks\ShipStation\Plugin\Model\Api\DataProviderInterface;
 
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Serialize\SerializerInterface;
-use DmiRud\ShipStation\Model\Api\Data\ServiceInterface;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface as ApiDataProviderInterface;
-use DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
-use DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterfaceFactory;
+use RadWorks\ShipStation\Model\Api\Data\ServiceInterface;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface as ApiDataProviderInterface;
+use RadWorks\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
+use RadWorks\ShipStation\Model\Carrier\ServiceRestrictionsInterfaceFactory;
 
 /**
  * Add service restrictions data object to the service data object

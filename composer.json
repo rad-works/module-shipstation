@@ -1,6 +1,6 @@
 {
-  "name": "dmi-rud/module-shipstation",
-  "version": "0.2.4",
+  "name": "rad-works/module-shipstation",
+  "version": "0.3.0",
   "description": "",
   "type": "magento2-module",
   "require": {
@@ -19,7 +19,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "DmiRud\\ShipStation\\": ""
+      "RadWorks\\ShipStation\\": ""
     }
   }
 }

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Api\Data;
+namespace RadWorks\ShipStation\Model\Api\Data;
 
-use DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
+use RadWorks\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
 
 interface ServiceInterface extends EntityInterface
 {

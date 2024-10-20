@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Console\Command;
+namespace RadWorks\ShipStation\Console\Command;
 
-use DmiRud\ShipStation\Model\Carrier\PackageBuilder;
+use RadWorks\ShipStation\Model\Carrier\PackageBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Catalog\Api\ProductRepositoryInterface;

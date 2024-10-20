@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Quote\Address\Total;
+namespace RadWorks\ShipStation\Model\Quote\Address\Total;
 
 use Magento\Framework\Phrase;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
@@ -9,9 +9,9 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Address\Total;
 use Magento\Quote\Model\Quote\Address\Total\AbstractTotal;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface;
-use DmiRud\ShipStation\Model\Carrier;
-use DmiRud\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface;
+use RadWorks\ShipStation\Model\Carrier;
+use RadWorks\ShipStation\Model\Carrier\ServiceRestrictionsInterface;
 
 class CustomsSurcharge extends AbstractTotal
 {

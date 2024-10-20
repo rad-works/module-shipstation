@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Block\Adminhtml\Form\Field\Renderer;
+namespace RadWorks\ShipStation\Block\Adminhtml\Form\Field\Renderer;
 
 use Magento\Framework\View\Element\Context;
 use Magento\Framework\View\Element\Html\Select;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface;
-use DmiRud\ShipStation\Model\Config\Source\Services;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface;
+use RadWorks\ShipStation\Model\Config\Source\Services;
 
 class ActiveServices extends Select
 {

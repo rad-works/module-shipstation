@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Carrier\Rate;
+namespace RadWorks\ShipStation\Model\Carrier\Rate;
 
-use DmiRud\ShipStation\Model\Carrier\PackageBuilderInterface;
+use RadWorks\ShipStation\Model\Carrier\PackageBuilderInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Escaper;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Shipping\Model\Rate\PackageResultFactory;
-use DmiRud\ShipStation\Model\Api\Data\Rate;
-use DmiRud\ShipStation\Model\Api\Data\RateInterface;
-use DmiRud\ShipStation\Model\Api\Data\RateInterfaceFactory;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface;
-use DmiRud\ShipStation\Model\Api\RequestBuilderInterface;
-use DmiRud\ShipStation\Model\Carrier\RateCalculationMethodInterface;
+use RadWorks\ShipStation\Model\Api\Data\Rate;
+use RadWorks\ShipStation\Model\Api\Data\RateInterface;
+use RadWorks\ShipStation\Model\Api\Data\RateInterfaceFactory;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface;
+use RadWorks\ShipStation\Model\Api\RequestBuilderInterface;
+use RadWorks\ShipStation\Model\Carrier\RateCalculationMethodInterface;
 
 abstract class CalculationMethodAbstract implements RateCalculationMethodInterface
 {

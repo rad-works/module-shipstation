@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Api;
+namespace RadWorks\ShipStation\Model\Api;
 
-use DmiRud\ShipStation\Model\Api\Data\CarrierInterface;
-use DmiRud\ShipStation\Model\Api\Data\ServiceInterface;
+use RadWorks\ShipStation\Model\Api\Data\CarrierInterface;
+use RadWorks\ShipStation\Model\Api\Data\ServiceInterface;
 
 /**
  * Config for API related entities

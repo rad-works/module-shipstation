@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model;
+namespace RadWorks\ShipStation\Model;
 
 use Auctane\Api\Model\Carrier\Shipping as AuctaneCarrier;
 use Laminas\Http\Client;
@@ -40,15 +40,15 @@ use Magento\Shipping\Model\Tracking\ResultFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use DmiRud\ShipStation\Exception\NoServiceFoundForProduct;
-use DmiRud\ShipStation\Model\Api\AsyncClientInterface;
-use DmiRud\ShipStation\Model\Api\Client as ApiClient;
-use DmiRud\ShipStation\Model\Api\Data\RateInterface;
-use DmiRud\ShipStation\Model\Api\RequestInterface;
-use DmiRud\ShipStation\Model\Cache\Type\ApiResponse;
-use DmiRud\ShipStation\Model\Carrier\RateCalculationMethodFactory;
-use DmiRud\ShipStation\Model\Carrier\RateCalculationMethodInterface;
-use DmiRud\ShipStation\Model\Config\Source\ApiType;
+use RadWorks\ShipStation\Exception\NoServiceFoundForProduct;
+use RadWorks\ShipStation\Model\Api\AsyncClientInterface;
+use RadWorks\ShipStation\Model\Api\Client as ApiClient;
+use RadWorks\ShipStation\Model\Api\Data\RateInterface;
+use RadWorks\ShipStation\Model\Api\RequestInterface;
+use RadWorks\ShipStation\Model\Cache\Type\ApiResponse;
+use RadWorks\ShipStation\Model\Carrier\RateCalculationMethodFactory;
+use RadWorks\ShipStation\Model\Carrier\RateCalculationMethodInterface;
+use RadWorks\ShipStation\Model\Config\Source\ApiType;
 
 class Carrier extends AuctaneCarrier
 {

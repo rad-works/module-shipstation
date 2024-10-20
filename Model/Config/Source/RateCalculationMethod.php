@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Config\Source;
+namespace RadWorks\ShipStation\Model\Config\Source;
 
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
-use DmiRud\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemsPerPackage;
+use RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemPerPackage;
+use RadWorks\ShipStation\Model\Carrier\Rate\CalculationMethod\ItemsPerPackage;
 use Magento\Framework\Data\OptionSourceInterface;
 
 class RateCalculationMethod implements OptionSourceInterface

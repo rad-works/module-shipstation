@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DmiRud\ShipStation\Model\Config\Source;
+namespace RadWorks\ShipStation\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Framework\Escaper;
@@ -9,7 +9,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
-use DmiRud\ShipStation\Model\Api\DataProviderInterface;
+use RadWorks\ShipStation\Model\Api\DataProviderInterface;
 
 class Carriers implements OptionSourceInterface
 {
