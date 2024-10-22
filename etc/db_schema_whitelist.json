@@ -1,0 +1,19 @@
+{
+    "sales_order": {
+        "column": {
+            "base_shipping_surcharge_amount": true,
+            "base_shipping_surcharge_canceled": true,
+            "base_shipping_surcharge_invoiced": true,
+            "base_shipping_surcharge_refunded": true,
+            "base_shipping_surcharge_tax_amount": true,
+            "base_shipping_surcharge_tax_refunded": true,
+            "shipping_surcharge_amount": true
+        }
+    },
+    "quote_address": {
+        "column": {
+            "shipping_surcharge_amount": true,
+            "base_shipping_surcharge_amount": true
+        }
+    }
+}

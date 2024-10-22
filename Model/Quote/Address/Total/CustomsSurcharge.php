@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RadWorks\ShipStation\Model\Quote\Address\Total;
 
 use Magento\Framework\Phrase;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
@@ -17,14 +18,24 @@ class CustomsSurcharge extends AbstractTotal
 {
     public const TOTAL_CODE = 'shipping_customs_surcharge';
 
+    /**
+     * @var DataProviderInterface $dataProvider
+     */
     private readonly DataProviderInterface $dataProvider;
 
     /**
-     * @param DataProviderInterface $dataProvider
+     * @var PriceCurrencyInterface $priceCurrency
      */
-    public function __construct(DataProviderInterface $dataProvider)
+    private PriceCurrencyInterface $priceCurrency;
+
+    /**
+     * @param DataProviderInterface $dataProvider
+     * @param PriceCurrencyInterface $priceCurrency
+     */
+    public function __construct(DataProviderInterface $dataProvider, PriceCurrencyInterface $priceCurrency)
     {
         $this->dataProvider = $dataProvider;
+        $this->priceCurrency = $priceCurrency;
         $this->setCode(self::TOTAL_CODE);
     }
 
@@ -35,30 +46,22 @@ class CustomsSurcharge extends AbstractTotal
      * @param ShippingAssignmentInterface $shippingAssignment
      * @param Total $total
      * @return $this
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function collect(Quote $quote, ShippingAssignmentInterface $shippingAssignment, Total $total): static
     {
         parent::collect($quote, $shippingAssignment, $total);
-        $surcharge = 0;
         /** @var Address $address */
         $address = $shippingAssignment->getShipping()->getAddress();
-        $total->setTotalAmount($this->getCode(), $surcharge);
-        $total->setBaseTotalAmount($this->getCode(), $surcharge);
-        $address->setShippingSurchargeAmount($surcharge);
-        $address->setBaseShippingSurchargeAmount($surcharge);
-        if (!$baseSurcharge = $this->getBaseSurcharge($quote, $shippingAssignment)) {
-            return $this;
-        }
-
-        $surcharge = $total->getTotalAmount('subtotal') * $baseSurcharge;
-        $total->addTotalAmount($this->getCode(), $surcharge);
-        $total->addBaseTotalAmount($this->getCode(), $surcharge);
-        $total->setTotalAmount($this->getCode(), $surcharge);
-        $total->setBaseTotalAmount($this->getCode(), $surcharge);
-        $address->setShippingSurchargeAmount($total->getTotalAmount($this->getCode()));
-        $address->setBaseShippingSurchargeAmount($total->getBaseTotalAmount($this->getCode()));
+        $baseSurchargeRate = $this->getBaseSurcharge($quote, $shippingAssignment) ?: 0;
+        $baseSurchargeAmount = $baseSurchargeRate ? $total->getBaseTotalAmount('subtotal') * $baseSurchargeRate : 0;
+        $surchargeAmount = $baseSurchargeAmount ? $this->priceCurrency->convert(
+            $baseSurchargeAmount,
+            $quote->getStore()
+        ) : 0;
+        $address->setShippingSurchargeAmount($surchargeAmount);
+        $address->setBaseShippingSurchargeAmount($baseSurchargeAmount);
+        $total->setTotalAmount($this->getCode(), $surchargeAmount);
+        $total->setBaseTotalAmount($this->getCode(), $baseSurchargeAmount);
 
         return $this;
     }
@@ -74,14 +77,14 @@ class CustomsSurcharge extends AbstractTotal
     public function fetch(Quote $quote, Total $total): array
     {
         $surcharge = $quote->getShippingAddress()->getShippingSurchargeAmount();
-        if ($quote->getIsVirtual() && $surcharge) {
+        if ($quote->isVirtual() || !$surcharge) {
             return [];
         }
 
         return [
             'code' => $this->getCode(),
             'title' => $this->getLabel(),
-            'value' => (float) $surcharge,
+            'value' => (float)$surcharge,
         ];
     }
 
@@ -92,7 +95,7 @@ class CustomsSurcharge extends AbstractTotal
      */
     public function getLabel(): Phrase
     {
-        return __('Custom\'s Surcharge');
+        return __('Customs Surcharge');
     }
 
     /**
